@@ -27,5 +27,18 @@
         </form>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          // SOM D 로고 클릭 시 메인 페이지로 이동
+            document.querySelector('.SomDLogo').addEventListener('click', function() {
+            window.location.href = '/';  
+            });
+          // SOM D 텍스트 클릭 시 메인 페이지로 이동
+            document.querySelector('.maincolor').addEventListener('click', function() {
+            window.location.href = '/';  
+            });
+        });
+    </script>
+
 
 {% endblock %}

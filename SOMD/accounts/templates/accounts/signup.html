@@ -28,7 +28,7 @@
     </ul>
 {% endif %}
 
-<form action="{% url 'accounts:signup' %}" method="POST">
+<form action="{% url 'accounts:signup' %}" method="POST" onsubmit="return validateForm()">
     {% csrf_token %}
     <section class="titleSection">
         <h3 class="title">개인정보 입력</h3>
@@ -56,7 +56,7 @@
             </div>
             <div class="inputBlank">
                 <p>생년월일</p>
-                <input type="text" name="birth" placeholder="YYYY.MM.DD" required>
+                <input type="text" name="birth" placeholder="YYYYMMDD" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required maxlength="8">
             </div>
             <div class="inputBlank">
                 <p>단과대</p>
@@ -97,6 +97,10 @@
                 <input type="password" name="password" required>
             </div>
             <div class="inputBlank">
+                <p>PW CONFIRM</p>
+                <input type="password" name="confirm" required>
+            </div>
+            <div class="inputBlank">
                 <p>Email</p>
                 <input type="text" name="email" required>
             </div>
@@ -132,9 +136,9 @@
             </div> -->
         </div>
     </section>
+    <input class="signupBtn" type="submit" value="회원가입" style="color:white" onclick="vatlidateForm()">
+    <!-- <button class="signupBtn" type='submit' value="회원가입" style="color:white">회원가입</button> -->
     
-    <input class="signupBtn" type="submit" value="회원가입" style="color:white">
-
 </form>
 
 <script>
@@ -213,11 +217,51 @@ function isBirthday() {
         }//end of if
 }
 
-// function validateform(){
-//         var isBirthday = isBirthday();
-//         var 
-// }
+function validateForm() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var confirm_password = document.getElementById('confirm').value;
+    var isValidBirthday = isBirthday();
+
+    // 생년월일 확인
+    if (!isValidBirthday){
+        alert("생년월일이 올바르지 않습니다.");
+        return false;
+    }
+
+    // 아이디 형식 확인
+    if (!/^[a-zA-Z0-9_-]{4,16}$/.test(username)) {
+        alert('아이디는 영문자, 숫자, 대시(-), 밑줄(_)로 구성되며 4자 이상 16자 이하여야 합니다.');
+        return false;
+    }
+
+    // 비밀번호 형식 확인
+    else if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+        alert('비밀번호는 영문자, 숫자, 특수문자(@$!%*?&)를 모두 포함하여 8자 이상이어야 합니다.');
+        return false;
+    }
+
+    // 비밀번호 일치 여부 확인
+    else if (password !== confirm_password) {
+        alert('비밀번호가 일치하지 않습니다.');
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 
 </script>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // SOM D 로고 클릭 시 메인 페이지로 이동
+        document.querySelector('.SomDLogo').addEventListener('click', function() {
+        window.location.href = '/';  
+        });
+      // SOM D 텍스트 클릭 시 메인 페이지로 이동
+        document.querySelector('.upperMainText').addEventListener('click', function() {
+        window.location.href = '/';  
+        });
+    });
+</script>
 {% endblock %}

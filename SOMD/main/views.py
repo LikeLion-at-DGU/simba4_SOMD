@@ -3,7 +3,12 @@ from .models import Post, Comment, Tag, SOMD, Member
 from django.contrib.auth.models import User
 from django.utils import timezone
 import re
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+
 # Create your views here.
+
+
 def mainpage(request):
     if request.user.is_authenticated:
         user = request.user
@@ -25,8 +30,22 @@ def createSOMD(request):
     if request.user.is_authenticated:
         user = request.user
         new_somd = SOMD()
-        new_somd.backgroundimage = request.FILES.get("back_pic")
-        new_somd.profileimage = request.FILES.get("profile_pic")
+        if "back_pic" in request.FILES:
+            new_somd.backgroundimage = request.FILES["back_pic"]
+        else:
+            default_image_path = "somd/somdbackDefaultImage.png"
+            default_image_content = default_storage.open(default_image_path).read()
+            default_image_file = ContentFile(default_image_content)
+            new_somd.backgroundimage.save("somdbackDefaultImage.png", default_image_file)
+        
+        if "profile_pic" in request.FILES:
+            new_somd.profileimage = request.FILES["profile_pic"]
+        else:
+            default_profile_image_path = "somd/somdDefaultImage.png"
+            default_profile_image_content = default_storage.open(default_profile_image_path).read()
+            default_profile_image_file = ContentFile(default_profile_image_content)
+            new_somd.profileimage.save("somdDefaultImage.png", default_profile_image_file)
+    
         new_somd.name = request.POST["somdname"]
 
         if request.POST.get("department"):

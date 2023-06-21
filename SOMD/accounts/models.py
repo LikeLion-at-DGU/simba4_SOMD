@@ -12,6 +12,7 @@ class Profile(models.Model):
     birthday = models.DateField()
     college = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
+    profile_pic = models.ImageField(upload_to='user_profile/', default='user_profile/usrDefaultImage.png')
     
     def __str__(self):
         return self.user.username

@@ -52,6 +52,8 @@
     height: 150px;
     border-radius: 50%;
     border: 3px solid #0ECC87;
+    overflow: hidden;
+    object-fit: cover;
 }
 
 section .button_case{
