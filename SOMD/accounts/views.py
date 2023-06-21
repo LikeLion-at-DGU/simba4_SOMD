@@ -36,6 +36,7 @@ def signup(request):
         year = birth[:4]
         month = birth[4:6]
         day = birth[6:]
+        birth = f'{year}-{month}-{day}'
         college = request.POST['college']
         department = request.POST['department']
         email = request.POST['email']
@@ -59,24 +60,21 @@ def signup(request):
 
         try:
             user = User.objects.create_user(username=request.POST['username'], password=request.POST['password'])
-            
             user.save()
 
             # 추가 필드 정보 저장
-            birthday = year + '-' + month + '-' + day
             profile = Profile(
                 user=user,
                 name=name,
                 nickname=nickname,
                 gender=gender,
-                birthday=birthday,
+                birthday=birth,
                 college=college,
                 department=department
             )
             profile.save()
 
             auth.login(request, user)
-
             messages.success(request, '회원 가입이 완료되었습니다.')
             return redirect('main:mainpage')
         except Exception as e:
