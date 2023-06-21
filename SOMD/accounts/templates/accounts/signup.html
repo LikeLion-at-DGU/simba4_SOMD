@@ -45,7 +45,14 @@
             </div>
             <div class="inputBlank">
                 <p>성별</p>
-                <input type="text" name="gender" placeholder="남/여" required>
+                <!-- <input type="text" name="gender" placeholder="남/여" required> -->
+                <div class="select selectOption">
+                    <select id="college" name="gender" class="selectOption">
+                        <option value="" selected disabled>성별</option>
+                        <option value="M">남</option>
+                        <option value="FM">여</option>
+                    </select>
+                </div>
             </div>
             <div class="inputBlank">
                 <p>생년월일</p>
