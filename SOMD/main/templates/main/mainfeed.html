@@ -27,16 +27,16 @@
             <div class="background image">
             {% endif %}
             
-
+{% comment %} 
             <a class="bookmark" href="{% url 'main:bookmark' somd.id %}">
                 {% if is_user_bookmarked %}
                     <i class="fa-regular fa-star" style="color: blue;"></i>
                 {% else %}
                     <i class="fa-regular fa-star"></i>
                 {% endif %}
-            </a>
+            </a> {% endcomment %}
             
-            {% comment %} <a class="bookmark"><i class="fa-regular fa-star"></i></a> {% endcomment %}
+            <a class="bookmark"><i class="fa-regular fa-star"></i></a>
             
             <div class="info">
                     <div>{{somd.college}}</div>
