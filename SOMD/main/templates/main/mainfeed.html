@@ -86,6 +86,62 @@
         
         <section class="postContainer linebyline_post">
             <div class="list">
+                {% if fixed_posts %}
+                {% for post in fixed_posts %}
+                <a class="post_box" href="{% url 'main:viewpost' post.id %}">
+                    <section class="post_header">
+                        <div class="profile">
+                            <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
+                            <div class="name">{{ post.writer.profile.nickname }}</div>
+                        </div>
+                        <div class="icon">
+                            <i class="fa-solid fa-thumbtack" onClick="location.href='{% url 'main:fix' post.id somd.id %}'"></i>
+                            <p>됨.</p>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                        </div>
+                    </section>
+                    <div class="about_post">
+
+                        {% if post.images.all %}
+                            
+                            <div class="image" style="background-image:url( {{ post.images.first.image.url }} );">
+                            {% if post.images.all|length > 1 %}
+                                <div class="image_more">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                            {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="nonimage"></div>
+                        {% endif %}
+                        <div class="text">
+                            <div class="title">{{ post.title }}</div>
+                            <div class="body">{{ post.summary }}</div>
+                        </div>
+                    </div>
+                    <section class="post_footer">
+                        <div class="icon">
+                            <div class="like">
+                                <i class="fa-solid fa-heart"></i>
+                                <div>10</div>
+                            </div>
+                            <div class="comment">
+                                <i class="fa-regular fa-message"></i>
+                                <div>10</div>
+                            </div>
+                        </div>
+
+                        <div class="scrap">
+                            <i class="fa-regular fa-bookmark"></i>
+                        </div>
+
+                    </section>
+                </a>
+                {% endfor %}
+                {% endif %}
+
                 {% if posts %}
                 {% for post in posts %}
                 <a class="post_box" href="{% url 'main:viewpost' post.id %}">
@@ -95,7 +151,9 @@
                             <div class="name">{{ post.writer.profile.nickname }}</div>
                         </div>
                         <div class="icon">
-                            <i class="fa-solid fa-thumbtack"></i>
+                            <i class="fa-solid fa-thumbtack" onClick="location.href='{% url 'main:fix' post.id somd.id %}'"></i>
+                            <p>안됨.</p>
+                            
                             <i class="fa-solid fa-ellipsis-vertical"></i>
                         </div>
                     </section>
@@ -140,6 +198,7 @@
                 {% else %}
                 <section class="warning">아직 포스트가 없습니다!</section>
                 {% endif %}
+            </div>
         </section>
     
     </section> 
@@ -170,7 +229,7 @@ if(event.target == postContainer_control ||event.target  == postContainer_contro
         // postContainer_control_icon.className = "fa-solid fa-list";
 
         for(image of nonImages){
-            image.parentNode.parentNode.style.display = "none";
+            image.parentNode.parentNode.style.display = "block";
         }
     }
     else if (postContainer_control_state == "피드"){

@@ -91,15 +91,24 @@
             </div>
             <div class="inputBlank">
                 <p>ID</p>
-                <input type="text" id="username" name="username" required>
+                <section class="inputAndAlert">
+                    <input type="text" id="username" name="username" required>
+                    <span class="errorMsg" id="idError"></span>
+                </section>
             </div>
             <div class="inputBlank">
                 <p>PW</p>
-                <input type="password" id="password" name="password" required>
+                <section class="inputAndAlert">
+                    <input type="password" id="password" name="password" required>
+                    <span class="errorMsg" id="pwError"></span>
+                </section>
             </div>
             <div class="inputBlank">
                 <p>PW CONFIRM</p>
-                <input type="password" id="confirm" name="confirm" required>
+                <section class="inputAndAlert">
+                    <input type="password" id="confirm" name="confirm" required>
+                    <span class="errorMsg" id="pwConfirmError"></span>
+                </section>
             </div>
             <div class="inputBlank">
                 <p>Email</p>
@@ -207,21 +216,35 @@ function validateForm() {
 
     // 아이디 형식 확인
     if (!/^[a-zA-Z0-9_-]{4,16}$/.test(username)) {
-        alert('아이디는 영문자, 숫자, 대시(-), 밑줄(_)로 구성되며 4자 이상 16자 이하여야 합니다.');
+        // alert('아이디는 영문자, 숫자, 대시(-), 밑줄(_)로 구성되며 4자 이상 16자 이하여야 합니다.');
         // return false;
-    } else isValidUsername = true;
-
+        document.getElementById("idError").innerText = "ID를 입력하세요.";
+        return false;
+    } else {
+        isValidUsername = true;
+        document.getElementById("idError").innerText = "";
+    }
     // 비밀번호 형식 확인
     if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
-        alert('비밀번호는 영문자, 숫자, 특수문자(@$!%*?&)를 모두 포함하여 8자 이상이어야 합니다.');
+        // alert('비밀번호는 영문자, 숫자, 특수문자(@$!%*?&)를 모두 포함하여 8자 이상이어야 합니다.');
         // return false;
-    } else isValidPassword = true;
+        document.getElementById("pwError").innerText = "비밀번호 양식을 입력하세요.";
+        return false;
+    } else {
+        isValidPassword = true;
+        document.getElementById("pwError").innerText = "";
+    }
 
     // 비밀번호 일치 여부 확인
     if (password !== confirm_password) {
-        alert('비밀번호가 일치하지 않습니다.');
+        // alert('비밀번호가 일치하지 않습니다.');
         // return false;
-    } else isEqualPassword = true;
+        document.getElementById("pwConfirmError").innerText = "비밀번호가 일치하지 않습니다.";
+        return false;
+    } else  {
+        isEqualPassword = true;
+        document.getElementById("pwConfirmError").innerText = "";
+    }
 
     // 입력한 정보가 유효하지 않을 경우
     // if (!isValidBirthday || !/^[a-zA-Z0-9_-]{4,16}$/.test(username) || !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password) || password !== confirm_password) {

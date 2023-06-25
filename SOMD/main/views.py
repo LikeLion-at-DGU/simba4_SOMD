@@ -7,8 +7,6 @@ import re
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 
-
-
 # Create your views here.
 
 
@@ -43,19 +41,11 @@ def createSOMD(request):
         new_somd = SOMD()
         if "back_pic" in request.FILES:
             new_somd.backgroundimage = request.FILES["back_pic"]
-        else:
-            default_image_path = "somd/somdbackDefaultImage.png"
-            default_image_content = default_storage.open(default_image_path).read()
-            default_image_file = ContentFile(default_image_content)
-            new_somd.backgroundimage.save("somdbackDefaultImage.png", default_image_file)
+        
         
         if "profile_pic" in request.FILES:
             new_somd.profileimage = request.FILES["profile_pic"]
-        else:
-            default_profile_image_path = "somd/somdDefaultImage.png"
-            default_profile_image_content = default_storage.open(default_profile_image_path).read()
-            default_profile_image_file = ContentFile(default_profile_image_content)
-            new_somd.profileimage.save("somdDefaultImage.png", default_profile_image_file)
+        
     
         new_somd.name = request.POST["somdname"]
 
@@ -75,7 +65,7 @@ def createSOMD(request):
 
         member, created = Member.objects.get_or_create(user=user)
         member.somds.add(new_somd)
-        new_somd.admins.set([request.user])
+        # new_somd.admins.set([request.user])
         
         new_somd.join_members.add(request.user)
         
@@ -98,19 +88,11 @@ def somd_update(request, id):
     
     if "back_pic" in request.FILES:
         update_somd.backgroundimage = request.FILES["back_pic"]
-    else:
-        default_image_path = "somd/somdbackDefaultImage.png"
-        default_image_content = default_storage.open(default_image_path).read()
-        default_image_file = ContentFile(default_image_content)
-        update_somd.backgroundimage.save("somdbackDefaultImage.png", default_image_file)
+    
 
     if "profile_pic" in request.FILES:
         update_somd.profileimage = request.FILES["profile_pic"]
-    else:
-        default_profile_image_path = "somd/somdDefaultImage.png"
-        default_profile_image_content = default_storage.open(default_profile_image_path).read()
-        default_profile_image_file = ContentFile(default_profile_image_content)
-        update_somd.profileimage.save("somdDefaultImage.png", default_profile_image_file)
+   
 
     update_somd.name = request.POST["somdname"]
 
@@ -136,16 +118,25 @@ def somd_update(request, id):
     return redirect("main:mainfeed", update_somd.id)
 
 
-
 def mainfeed(request, id):
-    # user = request.user
-    # member = Member.objects.get(user=user)
     somd = SOMD.objects.get(id=id)
-    posts = somd.somds.all()
+    posts = somd.somds.filter(is_fixed=False)
+    fixed_posts = somd.somds.filter(is_fixed=True)
+
     return render(request, "main/mainfeed.html", {
         'somd': somd,
-        'posts':posts
+        'posts': posts,
+        'fixed_posts': fixed_posts,
     })
+# def mainfeed(request, id):
+#     # user = request.user
+#     # member = Member.objects.get(user=user)
+#     somd = SOMD.objects.get(id=id)
+#     posts = somd.somds.all()
+#     return render(request, "main/mainfeed.html", {
+#         'somd': somd,
+#         'posts':posts
+#     })
 
 def mysomd(request):
     user = request.user
@@ -190,7 +181,7 @@ def createpost(request, somd_id):
                 new_image = Images.objects.create(post=new_post, image=image)
 
             return render(request, 'main/viewpost.html', {'post': new_post, 'images': new_post.images.all()})
-        
+
 
 def join(request, id):
     somd = SOMD.objects.get(id=id)
@@ -275,16 +266,11 @@ def viewpost(request, post_id):
         images = post.images.all()
         comments = Comment.objects.filter(post=post)
         num_likes = post.like.count()
-        
-        # 댓글수!!!!!!!!!;;
-        num_comments = comments.count()
-        
         return render(request, 'main/viewpost.html', {
             'post': post,
             'images': images,
             'comments': comments,
             'num_likes': num_likes,
-            'num_comments': num_comments,
         })
     elif request.method == 'POST':
         if request.user.is_authenticated:
@@ -294,7 +280,9 @@ def viewpost(request, post_id):
             new_comment.content = request.POST["comment"]
             new_comment.pub_date = timezone.now()
             new_comment.save()
-            
+            # post.comment.count()
+            # post.update_num_comments()
+
             return redirect('main:viewpost', post.id)
 
 def bookmark(request,SOMD_id):
@@ -344,9 +332,8 @@ def like_post(request, post_id):
 
 
 def CountSomdMember(request):
-    somds = SOMD.objects.annotate(num_members=Count('members')).order_by('-num_members')[:7]
+    somds = SOMD.objects.annotate(num_members=Count('members')).all()
     return render(request, 'main/board.html', {"somds": somds})
-
 
 # def JoinRequest(request):
 #         new_join_request = JoinRequest()
@@ -362,3 +349,13 @@ def CountSomdMember(request):
 #         join_request.save()  
         
 #         return redirect('가입완료페이지')
+
+def fix(request, post_id, somd_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.is_fixed:
+        post.is_fixed = False
+    else:
+        post.is_fixed = True
+    post.save()
+    
+    return redirect('main:mainfeed', id = somd_id)

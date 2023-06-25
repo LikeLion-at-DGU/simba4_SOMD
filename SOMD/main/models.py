@@ -72,7 +72,7 @@ class Post(models.Model):
 
     scrap = models.ManyToManyField(User, related_name='scrap', blank=True)
     
-    is_fix = models.BooleanField(default=False)
+    is_fixed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -98,7 +98,7 @@ class Comment(models.Model):
     def __str__(self):
         return self.post.title+" : "+self.content[:20]
     
-    def save(self, *args, **kwargs):   #여기서 def를 만들지말고
+    def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # self.post.update_num_comments()
 
