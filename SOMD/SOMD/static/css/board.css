@@ -99,6 +99,10 @@
     margin-bottom: 5px;
 }
 
+.middleSomdList{
+    margin-bottom: 20px;
+}
+
 .middleSomdList>.list{
     width: 100%;
     margin-top: 5px;
@@ -116,19 +120,8 @@
     border: none;
 }
 
-.middleSomdList .warning{
-    display: flex;
-    flex-direction: column;
-    height: 100px;
-    width: 100%;    
-}
-.middleSomdList .warning> i{
-    margin: 10px;
-    font-size: 20px;
-}
-
 .departmentTitle{
-    padding:5px;
+    padding: 15px 20px ;
 
     color: #0ECC87;
     border-radius: 20px;
@@ -184,10 +177,12 @@
 
 
 .option{
+    /* width: 100%; */
+    /* margin: 0px 10px; */
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
-    margin:10px 0px 15px 0px;
+    margin:10px 10px 15px 10px;
     font-size: 20px;
 
     color:grey;
@@ -203,10 +198,11 @@
 }
 
 .row_tag_box{
-    width: 100%;
+    flex-grow: 1;
     height: 40px;
-    
-    
+
+    display: flex;
+    /* margin: 10px 0px; */
 }
 
 .row_tag_box_for_scroll{
@@ -218,7 +214,8 @@
 
 .row_tag_box .tag_label{
     border: solid 3px #0ECC87;
-    color: #0ECC87;
+    background-color: #0ECC87;
+    color: white;
     border-radius: 20px;
     padding: 5px 10px;
     margin-right: 5px;
@@ -226,6 +223,12 @@
     flex-shrink: 0;
 }
 
+.row_tag_box .notice{
+    font-size: 15px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
 .tag_popup{
     border: #0ECC87 solid 3px;
     border-radius: 10px;
@@ -326,18 +329,14 @@
 }
 
 
-.button{
-    /* width: 120px;
-    height: 40px; */
-    padding: 7px 25px;
-    /* background-color: lightgrey; */
-    color: lightgrey;
-    margin: 0px 0px;
-
-    border: solid 2px #0ECC87;
-    background-color: white;
+  
+.section_title{
+    /* padding:0px 10px; */
     color: #0ECC87;
-    display:inline-block;
-    border-radius: 20px;
-    font-size: 15px;
+    font-size: 25px;
+    /* margin-top: 20px; */
+    margin-top: 40px;
+    margin-bottom: 10px;
+    padding: 0px 10px 5px 10px;
+    border-bottom: solid lightgrey 1px;
 }

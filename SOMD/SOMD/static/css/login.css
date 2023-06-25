@@ -12,6 +12,11 @@
  padding: 20px 20px;
 }
 
+.maincolor {
+    font-weight: bold; 
+    font-size: 50px;
+}
+
 .title{
  font-weight: bold;
  font-size: 50px;

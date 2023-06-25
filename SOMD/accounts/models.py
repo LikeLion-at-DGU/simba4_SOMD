@@ -20,6 +20,7 @@ class Profile(models.Model):
     email = models.CharField(max_length=100, blank=True, null=True)
     #없앨거에요?
     nickname = models.CharField(max_length=10)
+    
 
     def __str__(self):
         return self.user.username

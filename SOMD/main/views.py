@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count 
-from .models import Post, Comment, Tag, SOMD, Member, Images, JoinRequest
+from .models import Post, Comment, Tag, SOMD, Member, Images, JoinRequest, UserAlram, Alram
 from django.contrib.auth.models import User
 from django.utils import timezone
 import re
@@ -15,14 +15,23 @@ def mainpage(request):
         user = request.user
         members = Member.objects.filter(user=user)
         somds = SOMD.objects.filter(members__in=members)
+
+        posts = Post.objects.filter(somd__in =somds)
         if somds:
-            return render(request, 'main/mainpage.html', {'somds': somds})
+            posts = posts.order_by('-pub_date')
+            return render(request, 'main/mainpage.html', {
+                'somds': somds,
+                'posts' : posts
+                
+            })
     return render(request, 'main/mainpage.html')
 
     
 def board(request):
-    somds = SOMD.objects.all()
+    #somds = SOMD.objects.all()
+    somds = SOMD.objects.annotate(totalMember=Count('members')).order_by('-totalMember')
     tags = Tag.objects.all()
+    
     return render(request, 'main/board.html', {
         "somds": somds,
         "tags": tags,
@@ -92,7 +101,6 @@ def somd_update(request, id):
 
     if "profile_pic" in request.FILES:
         update_somd.profileimage = request.FILES["profile_pic"]
-   
 
     update_somd.name = request.POST["somdname"]
 
@@ -120,23 +128,14 @@ def somd_update(request, id):
 
 def mainfeed(request, id):
     somd = SOMD.objects.get(id=id)
-    posts = somd.somds.filter(is_fixed=False)
-    fixed_posts = somd.somds.filter(is_fixed=True)
+    posts = somd.posts.filter(is_fixed=False)
+    fixed_posts = somd.posts.filter(is_fixed=True)
 
     return render(request, "main/mainfeed.html", {
         'somd': somd,
         'posts': posts,
         'fixed_posts': fixed_posts,
     })
-# def mainfeed(request, id):
-#     # user = request.user
-#     # member = Member.objects.get(user=user)
-#     somd = SOMD.objects.get(id=id)
-#     posts = somd.somds.all()
-#     return render(request, "main/mainfeed.html", {
-#         'somd': somd,
-#         'posts':posts
-#     })
 
 def mysomd(request):
     user = request.user
@@ -231,19 +230,44 @@ def members_wantTojoin(request, somd_id, request_id):
             somd.join_members.add(joinrequest.writer)
             somd.waitTojoin_members.remove(joinrequest.writer)
             member.somds.add(somd)
+
+            receiveUser, created = UserAlram.objects.get_or_create(user=joinrequest.writer)
+            
+            alram = Alram()
+            alram.type ="somdAccept"
+            alram.sendUser = (request.user)
+            alram.somd = (somd)
+            alram.date = timezone.now()
+
+            alram.save()
+
+            receiveUser.alrams.add(alram)
             
         elif "reject" == request.POST["wantTojoin_result"] :
             somd.waitTojoin_members.remove(joinrequest.writer)
             member.rejected_somds.add(somd)
+
+            #유저에게 알람 전달
+            receiveUser, created = UserAlram.objects.get_or_create(user=joinrequest.writer)
+            
+            alram = Alram()
+            alram.type ="somdReject"
+            alram.sendUser = (request.user)
+            alram.somd = (somd)
+            alram.date = timezone.now()
+
+            alram.save()
+
+            receiveUser.alrams.add(alram)
+
+
 
         somd.join_requests.remove(joinrequest)
         joinrequest.delete()
 
         member.waiting_somds.remove(somd)
 
-    return render(request, "main/members.html", {
-        'somd': somd,
-    })
+    return redirect("main:members", somd.id)
 
 
 def members_delete(request, somd_id, join_user_id):
@@ -255,9 +279,7 @@ def members_delete(request, somd_id, join_user_id):
     somd.join_members.remove(join_user)
     member.rejected_somds.add(somd)
 
-    return render(request, "main/members.html", {
-        'somd': somd,
-    })
+    return redirect("main:members", somd.id)
 
 
 def viewpost(request, post_id):
@@ -265,12 +287,12 @@ def viewpost(request, post_id):
     if request.method == 'GET':
         images = post.images.all()
         comments = Comment.objects.filter(post=post)
-        num_likes = post.like.count()
+        
         return render(request, 'main/viewpost.html', {
             'post': post,
             'images': images,
             'comments': comments,
-            'num_likes': num_likes,
+
         })
     elif request.method == 'POST':
         if request.user.is_authenticated:
@@ -280,60 +302,62 @@ def viewpost(request, post_id):
             new_comment.content = request.POST["comment"]
             new_comment.pub_date = timezone.now()
             new_comment.save()
-            # post.comment.count()
-            # post.update_num_comments()
+            post.comment_count += 1
+            post.save()
 
             return redirect('main:viewpost', post.id)
 
-def bookmark(request,SOMD_id):
-    bookmarked_somd = get_object_or_404(SOMD, pk=id)
+def bookmark(request, somd_id):
+    somd = SOMD.objects.get(id=somd_id)
     user = request.user
-    is_user_bookmarked = user.bookmark.filter(id=bookmarked_somd.id).exists()
-    
+    is_user_bookmarked = user.bookmark.filter(id=somd.id).exists()
+
     if is_user_bookmarked:
-        user.bookmark.add(bookmarked_somd) 
-        bookmarked = True
-    
+        user.bookmark.remove(somd)
+        is_user_bookmarked = False
     else:
-        user.bookmark.remove(bookmarked_somd)
-        bookmarked = False
-        
-    return redirect('main:mysomd', bookmarked_somd.id) #??어디로 redirect??
+        user.bookmark.add(somd)
+        is_user_bookmarked = True
+
+    user.save()
+
+    return redirect('main:mainfeed', somd.id)
 
 
-
-    
-    
-def Scrap(request, post_id):
+def scrap(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     user = request.user
     is_user_scraped = user.scrap.filter(id=post.id).exists()
     
     if is_user_scraped:
-        user.scrap.add(post) 
-        scraped = True
-    
+        user.scrap.remove(post) 
     else:
-        user.scrap.remove(post)
-        scraped = False
-        
+        user.scrap.add(post)
+    user.save()
     return redirect('main:viewpost', post.id)
 
+def scrap_view(request):
+    user = request.user
+    posts = user.scrap.all()
+    return render(request, 'main/scrappedPost_view.html', {'posts':posts})
 
-def like_post(request, post_id):
+
+def post_like(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     user = request.user
-    if user.is_authenticated:
-        if post.like.filter(id=user.id).exists():
-            post.like.remove(user)
-        else:
-            post.like.add(user)
+    if user in post.like.all():
+        post.like.remove(request.user)
+        post.like_count -= 1
+    else:
+        post.like.add(request.user)
+        post.like_count += 1
+    post.save()
     return redirect('main:viewpost', post_id)
 
 
-def CountSomdMember(request):
-    somds = SOMD.objects.annotate(num_members=Count('members')).all()
-    return render(request, 'main/board.html', {"somds": somds})
+# def CountSomdMember(request):
+#     somds = SOMD.objects.annotate(num_members=Count('members')).all()
+#     return render(request, 'main/board.html', {"somds": somds})
 
 # def JoinRequest(request):
 #         new_join_request = JoinRequest()
@@ -359,3 +383,37 @@ def fix(request, post_id, somd_id):
     post.save()
     
     return redirect('main:mainfeed', id = somd_id)
+
+def alram(request):
+    alrams, created = UserAlram.objects.get_or_create(user=request.user)
+    return render(request, "main/alram.html", {
+        'alrams': alrams,
+    })
+
+def post_edit(request, post_id):
+    edit_post = Post.objects.get(id=post_id)
+    return render(request, "main/post_update.html", {"post": edit_post})
+
+def post_update(request, post_id):
+    user = request.user
+    update_post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        if user == update_post.writer:
+            update_post.title = request.POST['title']
+            update_post.content = request.POST['content']
+            update_post.pub_date = timezone.now()
+            if request.FILES.getlist('images'):
+                images = request.FILES.getlist('images')
+                for image in images:
+                    new_image = Images.objects.create(post=update_post, image=image)
+            
+            update_post.save()
+            return render(request, 'main/viewpost.html', {'post': update_post, 'images': update_post.images.all()})
+    return render(request, 'main/viewpost.html', {'post': update_post, 'images': update_post.images.all()})
+
+
+def post_delete(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user == post.writer:
+        post.delete()
+    return redirect('main:mainfeed', post.somd.id)

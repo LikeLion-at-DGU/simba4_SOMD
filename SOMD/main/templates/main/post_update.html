@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/post.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/new.css' %}">
+
+
+<section class="somdPage">
+    <section class="mainfeed">
+        <form action = "{% url 'main:post_update' post.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mainForm">
+                <section class="joinForm">
+                    <input type="text" name="title" class="titleForm" value="{{ post.title }}">
+                    <textarea type="text" name="content" class="textForm">{{post.content}}</textarea>
+                    <section class="textFormInnerBtn">
+                        <button type="button" onclick="chooseImage()"><i class="far fa-image"></i></button><br>
+                        <i class="fas fa-unlock-alt"></i>
+                    </section>
+                </section>
+            </div>
+
+            <div class="postPicturePreview image">
+                <label for="postPictureInput">
+                    <input type="file" accept="image/*" name="images" id="postPictureinput">
+                </label>
+            </div>
+
+            <!-- feed 사진 작업중 2 -->
+            <input type="file" id="image-input" name="images" style="display: none;" onchange="previewImage()">
+            <!-- <button onclick="chooseImage()"><i class="far fa-image"></i></button><br> -->
+            <img id="image-preview" src="" style="max-width: 300px; margin-top: 10px;">
+        
+
+
+            <div class="test">
+                <button type="submit" id="uploadBtn" class="button">수정</button>
+            </div>
+        </form>
+</section>
+
+<script>
+        // feed 사진 작업중 2
+    function chooseImage() {
+        var fileInput = document.querySelector('#image-input');
+        fileInput.click();
+    }
+
+    function previewImage() {
+        var preview = document.querySelector('#image-preview');
+        var file = document.querySelector('#image-input').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+        }
+    }
+</script>
+
+
+{% endblock %}

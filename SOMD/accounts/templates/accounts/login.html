@@ -10,7 +10,7 @@
             <div class="SomDLogo image"></div>
         </div> -->
         <div class="upperMainText">
-            <div class="maincolor" style="font-weight: bold; font-size: 50px;">
+            <div class="maincolor" onClick="window.location.href = '/'">
                 SOM D
             </div>
             <span>
@@ -30,7 +30,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
           // SOM D 로고 클릭 시 메인 페이지로 이동
-            document.querySelector('.SomDLogo').addEventListener('click', function() {
+            document.querySelector('.image').addEventListener('click', function() {
             window.location.href = '/';  
             });
           // SOM D 텍스트 클릭 시 메인 페이지로 이동

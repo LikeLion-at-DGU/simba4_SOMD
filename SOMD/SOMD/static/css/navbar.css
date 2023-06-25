@@ -1,14 +1,13 @@
-
 /* ---- 헤더 ---- */
 
-.header{
+.header {
   position: fixed;
-  top:0px;
+  top: 0px;
   left: 0px;
 
   width: 100%;
   height: 50px;
-  
+
   z-index: 3;
   background-color: white;
   border-bottom: solid 1px lightgrey;
@@ -17,12 +16,37 @@
   align-items: center;
   justify-content: end;
 
-  padding: 0px 20px;
+  padding: 0px 3px;
 }
 
+.mainTitle {
+  width: 100%;
+  /* margin:15px 0px 5px 0px; */
+  padding: 0px 5px;
+  color: #0ecc87;
+  font-weight: 500;
 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.EmptyForHeader{
+.mainTitle i {
+  padding-right: 10px;
+  font-size: 25px;
+  font-weight: 800;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mainTitle > div {
+  flex-grow: 1;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.EmptyForHeader {
   z-index: 2;
   width: 100%;
   height: 60px;
@@ -30,19 +54,61 @@
   flex-shrink: 0;
 }
 
-.header>.logo{
-text-decoration: none;
-color:#0ECC87;
-font-size: 20px;
+.header > .logo {
+  text-decoration: none;
+  color: #0ecc87;
+  font-size: 20px;
+}
+
+.header_button {
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 10px;
+  border: #0ecc87 2px solid;
+  background-color: #0ecc87;
+  color: white;
+}
+
+.header_button > i {
+  padding-right: 5px;
+  font-size: 15px;
+}
+
+.header_button:hover {
+  color: white;
+}
+
+.header_button-2 {
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 10px;
+  border: #0ecc87 2px solid;
+  background-color: white;
+  color: #0ecc87;
+}
+
+.header_button-2 > i {
+  padding-right: 5px;
+  font-size: 15px;
+}
+
+.header_button-2:hover {
+  color: #0ecc87;
 }
 
 /* ---- 사이드 바 ---- */
 
-.BlurForSidebar{
+.BlurForSidebar {
   position: fixed;
   top: 0px;
   left: 0px;
-  width: 100%;
+  width: 30%;
   height: 100%;
   background-color: grey;
   background-blend-mode: multiply;
@@ -50,42 +116,40 @@ font-size: 20px;
   z-index: 4;
 }
 
-.sidebar a{
+.sidebar a {
   font-size: 20px;
   padding: 10px 0px;
-
 }
-.sidebar i{
+.sidebar i {
   font-size: 25px;
 }
 
-.sidebar .logout{
+.sidebar .logout {
   width: 100%;
   display: flex;
   justify-content: end;
   align-items: center;
   font-size: 15px;
-  color:lightgrey;
+  color: lightgrey;
 }
 
-.sidebar .logout>i{
+.sidebar .logout > i {
   font-size: 15px;
   padding-right: 3px;
 }
 
-.sidebar_button_close{
+.sidebar_button_close {
   /* position: absolute;
   top: 0px; */
   width: 100%;
   height: 50px;
   display: flex;
   /* text-align: right; */
- align-items: center;
- justify-content: right;
+  align-items: center;
+  justify-content: right;
 }
 
-
-.sidebar_container{
+.sidebar_container {
   position: fixed;
   top: 0px;
   right: 0px;
@@ -93,13 +157,13 @@ font-size: 20px;
   width: 300px;
   height: 100%;
   background-color: white;
-
+  transition: width 2s ease-out;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.sidebar_container>.bottom{
+.sidebar_container > .bottom {
   width: 100%;
   height: 50px;
 
@@ -108,10 +172,10 @@ font-size: 20px;
   flex-shrink: 0;
   padding: 0px 10px;
 
-  box-shadow: 0 9px 5px 6px rgba(169, 169, 169, 0.299);;
+  box-shadow: 0 9px 5px 6px rgba(169, 169, 169, 0.299);
 }
 
-.sidebar_container>.bottom i{
+.sidebar_container > .bottom i {
   color: #282828;
   width: 50px;
   display: flex;
@@ -121,17 +185,16 @@ font-size: 20px;
   font-size: 20px;
 }
 
-.sidebar_container>.sidebar{
-
+.sidebar_container > .sidebar {
   padding: 0px 20px;
-  display: flex;  
+  display: flex;
   flex-direction: column;
   justify-content: start;
   align-items: start;
   flex-grow: 1;
 }
 
-.sidebar>.linkList{
+.sidebar > .linkList {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -139,7 +202,7 @@ font-size: 20px;
 
 /* ----네브바에있는 프로필(마이페이지로 감)--- */
 
-.sidebar>.profile{
+.sidebar > .profile {
   width: 100%;
   display: flex;
   align-items: center;
@@ -147,33 +210,32 @@ font-size: 20px;
   margin-bottom: 10px;
   border-bottom: solid 1px #282828;
 }
-.sidebar>.profile>.info{
+.sidebar > .profile > .info {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
-.sidebar>.profile>.info .department{
+.sidebar > .profile > .info .department {
   font-size: 12px;
 }
 
-.sidebar>.profile .image{
+.sidebar > .profile .image {
   flex-shrink: 0;
   margin-right: 10px;
   border-radius: 50%;
   width: 70px;
   height: 70px;
-  border: solid 2px #0ECC87;
+  border: solid 2px #0ecc87;
 }
 
-.sidebar>.profile i{
+.sidebar > .profile i {
   font-size: 20px;
 }
 
-
 /* ---- 네브바 ---- */
 
-.navbar{
+.navbar {
   width: 100%;
   height: 50px;
 
@@ -182,10 +244,10 @@ font-size: 20px;
   flex-shrink: 0;
   padding: 0px 10px;
 
-  box-shadow: 0 9px 5px 6px rgba(169, 169, 169, 0.299);;
+  box-shadow: 0 9px 5px 6px rgba(169, 169, 169, 0.299);
 }
 
-.navbar .icon{
+.navbar .icon {
   color: lightgrey;
   width: 50px;
   display: flex;
@@ -195,12 +257,11 @@ font-size: 20px;
   font-size: 20px;
 }
 
-.navbar .icon>i{
+.navbar .icon > i {
   margin: 5px;
-  
 }
 
-.boardIcon{
+/* .boardIcon{
   display: flex;
   justify-content: space-between;
   align-content: space-between ;
@@ -217,71 +278,69 @@ font-size: 20px;
   width: 50%;
   height: 50%;
   flex-shrink: 0;
-}
+} */
 
-.navbar .sidebar_button>i{
+.navbar .sidebar_button > i {
   font-size: 25px;
 }
 
-.navbar .text{
+.navbar .text {
   font-size: 10px;
 }
 
-
 .remove {
-    animation: removeHeader 0.3s;
-    animation-fill-mode: forwards;
-  }
+  animation: removeHeader 0.3s;
+  animation-fill-mode: forwards;
+}
 
-  @keyframes removeHeader {
-    0% {
-      top: 0px;
-    }
-    100% {
-      top: -50px;
-    }
+@keyframes removeHeader {
+  0% {
+    top: 0px;
   }
+  100% {
+    top: -50px;
+  }
+}
 
-  .removeEmpty{
-    animation: removeEmpty 0.3s;
-    animation-fill-mode: forwards;
+.removeEmpty {
+  animation: removeEmpty 0.3s;
+  animation-fill-mode: forwards;
+}
+@keyframes removeEmpty {
+  0% {
+    height: 60px;
   }
-  @keyframes removeEmpty {
-    0% {
-      height: 60px;
-    }
-    100% {
-      height: 0px;
-    }
+  100% {
+    height: 0px;
   }
+}
 
 .add {
-    animation: addHeader 0.3s;
-    animation-fill-mode: forwards;
-  }
+  animation: addHeader 0.3s;
+  animation-fill-mode: forwards;
+}
 
-  @keyframes addHeader {
-    0% {
-      top: -50px;
-    }
-    100% {
-      top: 0px;
-    }
+@keyframes addHeader {
+  0% {
+    top: -50px;
   }
+  100% {
+    top: 0px;
+  }
+}
 
-  
-  .addEmpty{
-    animation: addEmpty 0.3s;
-    animation-fill-mode: forwards;
+.addEmpty {
+  animation: addEmpty 0.3s;
+  animation-fill-mode: forwards;
+}
+@keyframes addEmpty {
+  0% {
+    height: 0px;
   }
-  @keyframes addEmpty {
-    0% {
-      height: 0px;
-    }
-    100% {
-      height: 60px;
-    }
+  100% {
+    height: 60px;
   }
+}
 
 /* <section class="header"></section>
     <section class="EmptyForHeader"></section> */

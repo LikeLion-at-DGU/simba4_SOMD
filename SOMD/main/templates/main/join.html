@@ -6,9 +6,14 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/join.css' %}">
 
 <section class="header">
-    <a class="logo" href="{% url 'main:mainpage' %}">SOMD</a>
+    <section class="mainTitle">
+        <a href="{% url 'main:mainfeed' somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>{{ somd.name }}</div>
+    </section>
 </section>
 <section class="EmptyForHeader"></section>
+
 <section class="somdPage">
     <section class="mainTitle">
         <i class="fas fa-sign-in-alt"></i>

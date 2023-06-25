@@ -5,10 +5,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/mysomd.css' %}">
 <section class="header">
     <section class="mainTitle">
-        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-user-group"></i>
         <div>
             나의솜디
         </div>
+        <i class="fa-solid fa-bell" onclick="location.href = {% url 'main:alram' %}"></i>
     </section>
 </section>
 <section class="EmptyForHeader"></section>
@@ -22,47 +23,42 @@
     <section class="somdList">
     {%if somds%} <!--2. 소모임이 있을 경우 -->
         {% for somd in somds %}
-        <a class="somd" href="{% url 'main:mainfeed' somd.id %}">
+        <a class="somd join " href="{% url 'main:mainfeed' somd.id %}">
             <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
             <div class="information">
                 <div class="name">{{ somd.name }}</div>
                 <div class="intro">{{ somd.intro }}</div>
-                <div class="tag"> 
-                    {%if somd.tags %}
-                    <i class="fa-solid fa-hashtag"></i>
-                    {% for tag in somd.tags.all %}
-                            {{ tag.name }}
-                    {% endfor %}
-                    {% else %}
-                        #없음
-                    {%endif%}
+                <div class="college"> {{ somd.college }} 
+                    {% if somd.department != "-" %} 
+                        {{ somd.department}}
+                    {% endif %} 
                 </div>
             </div>
         </a>
             {% endfor %}
      {% else %} <!--2. 소모임이 없을 경우 -->
-        <section class="warning">아직 가입된 소모임이 없습니다!<br>소모임을 가입해보세요!</section>
+        <a class="warning" href="{% url 'main:board' %}">
+            솜디가 아직 없습니다!
+            <br>
+            소모임에 가입해보세요!
+            <i class="fa-solid fa-plus"></i>
+        </a>
     {%endif%}
     </section>
 
     <section class="somdList">
     {%if waiting_somds %} <!--3. 가입 대기 중인 소모임이 있을 경우 -->
-        <div>가입대기중인 소모임</div>
+        <div class="section_title">가입대기중인 소모임</div>
         {% for somd in waiting_somds %}
-        <a class="somd" href="{% url 'main:mainfeed' somd.id %}">
+        <a class="somd wait" href="{% url 'main:mainfeed' somd.id %}">
             <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
             <div class="information">
                 <div class="name">{{ somd.name }}</div>
                 <div class="intro">{{ somd.intro }}</div>
-                <div class="tag"> 
-                    {%if somd.tags %}
-                    <i class="fa-solid fa-hashtag"></i>
-                    {% for tag in somd.tags.all %}
-                        {{ tag.name }}
-                    {% endfor %}
-                    {% else %}
-                        #없음
-                    {%endif%}
+                <div class="college"> {{ somd.college }} 
+                    {% if somd.department != "-" %} 
+                        {{ somd.department}}
+                    {% endif %} 
                 </div>
             </div>
         </a>

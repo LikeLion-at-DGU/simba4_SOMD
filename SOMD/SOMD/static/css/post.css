@@ -1,3 +1,28 @@
+.about_post:hover{
+    color: #282828;
+}
+
+.about_post:focus{
+    color: #282828;
+}
+.postContainer .postContainer_title{
+    color: grey;
+    font-size: 25px;
+    /* margin-top: 20px; */
+    margin-bottom: 20px;
+    padding: 0px 10px 10px 10px;
+    border-bottom: solid lightgrey 1px;
+}
+
+.postContainer .list{
+    padding-bottom: 25px;
+}
+
+.name>.somdname{
+    font-size: 10px;
+    color:lightgrey;
+}
+
 /* ----리스트형---- */
 
 .linebyline_post .post_box{
@@ -11,12 +36,15 @@
     color:grey;
 }
 
-.linebyline_post .postContainer> .list{
+.linebyline_post .postContainer .list{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
 }
+
+
+
 /* ----리스트형 헤더---- */
 .linebyline_post .post_header{
     display: flex;
@@ -27,6 +55,7 @@
     
 }
 .linebyline_post .post_header>.profile{
+    width: 100%;
     padding: 0px 5px;
     display: flex;
 }
@@ -37,9 +66,10 @@
     border-radius: 50%;
 }
 .linebyline_post .post_header>.profile>.name{
+    flex-grow: 1;
     padding: 0px 5px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -66,7 +96,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    /* width: 100%; */
     border: 1px solid lightgrey;
     padding: 5px;
     border-radius: 5px;
@@ -193,6 +223,7 @@
 .album_post .post_header>.profile{
     padding: 0px 5px;
     display: flex;
+    width: 100%;
 }
 .album_post .post_header>.profile>.image{
     width: 35px;
@@ -201,9 +232,10 @@
     border-radius: 50%;
 }
 .album_post .post_header>.profile>.name{
+    flex-grow: 1;
     padding: 0px 5px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 

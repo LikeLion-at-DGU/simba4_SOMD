@@ -1,89 +1,122 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/mypage.css' %}">
+{% extends 'base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/mypage.css' %}" />
 
 <section class="header">
-    <section class="mainTitle">
-        <div class="historyBack"><i class="fa-solid fa-chevron-left"></i></div>
-        <!-- <i class="fa-solid fa-house"></i> -->
-        <div>{{ somd.name }}</div>
-        <button type="submit" form="mypage_edit">제출</button>
-    </section>
+  <section class="mainTitle">
+      <a href="{% url 'users:mypage' %}"><i class="fa-solid fa-chevron-left"></i></a>
+      <div></div>
+
+      <button class="header_button-2" button type="submit" form="mypage_edit">
+          <i class="fa-solid fa-check"></i> 수정완료
+      </button>
+
+  </section>
 </section>
 <section class="EmptyForHeader"></section>
 
-
 <section class="somdPage">
-    <form id="mypage_edit" class="mypage" action = "{% url 'users:mypage_update' %}" method="post">
-        {% csrf_token %}
-        <section class="top">
-            <!-- <div class="label">프로필 사진</div> -->
-            <div class="image" style="background-image:url({{user.profile.profile_pic.url}});"></div>
-        </section>
+  <form
+    id="mypage_edit"
+    class="mypage"
+    action="{% url 'users:mypage_update' %}"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <section class="top">
+      <div
+        class="profile-pic-preview profile image"
+        style="background-image:url({{user.profile.profile_pic.url}});"
+      >
+        <i class="fa-regular fa-image"></i>
+        <label for="profile-pic-input">
+          <input
+            type="file"
+            accept="image/*"
+            name="profile_pic"
+            id="profile-pic-input"
+          />
+        </label>
+      </div>
+    </section>
 
-        <section class="middle">
-            <div class="fixinfo">{{ user.profile.email }}</div>
-            <div class="fixinfo">{{ user.profile.birth }} / {{ user.profile.gender }}</div>
-        </section>
+    <section class="middle">
+      <div class="fixinfo">{{ user.profile.email }}</div>
+      <div class="fixinfo">
+        {{ user.profile.birth }} / {{ user.profile.gender }}
+      </div>
+    </section>
 
-        <section class="item">
-            <div class="label">ID</div>
-            <div class="text">{{ user.username}}</div>
-        </section>
+    <section class="item">
+      <div class="label">ID</div>
+      <div class="text">{{ user.username}}</div>
+    </section>
 
-        <section class="item">
-            <div class="label">닉네임</div>
-            <input class="text" type="text" name="nickname" value="{{ user.profile.nickname }}" required>
-            <!-- <div class="text">{{ user.profile.nickname }}</div> -->
-        </section>
+    <section class="item">
+      <div class="label">닉네임</div>
+      <input
+        class="text"
+        type="text"
+        name="nickname"
+        value="{{ user.profile.nickname }}"
+        required
+      />
+      <!-- <div class="text">{{ user.profile.nickname }}</div> -->
+    </section>
 
-        <section class="item">
-            <div class="label">자기소개</div>
-            <textarea class="long text" type="text" name="intro" value="{{ user.profile.intro }}" ></textarea>
-        </section>
+    <section class="item">
+      <div class="label">자기소개</div>
+      <textarea
+        class="long text"
+        type="text"
+        name="intro"
+        value="{{ user.profile.intro }}"
+      ></textarea>
+    </section>
 
+    <section class="item">
+      <div class="label">소속대학</div>
+      <div class="select">
+        <select
+          id="college"
+          name="college"
+          onchange="selectDepartments()"
+          required
+        >
+          <option value="" selected disabled>단과대</option>
+          <option value="불교대학">불교대학</option>
+          <option value="문과대학">문과대학</option>
+          <option value="이과대학">이과대학</option>
+          <option value="법과대학">법과대학</option>
+          <option value="사회과학대학">사회과학대학</option>
+          <option value="경찰사법대학">경찰사법대학</option>
+          <option value="경영대학">경영대학</option>
+          <option value="바이오시스템대학">바이오시스템대학</option>
+          <option value="공과대학">공과대학</option>
+          <option value="AI융합대학">AI융합대학</option>
+          <option value="사범대학">사범대학</option>
+          <option value="예술대학">예술대학</option>
+          <option value="약학대학">약학대학</option>
+          <option value="미래융합대학">미래융합대학</option>
+        </select>
 
-        <section class="item">
-            
-            <div class="label">소속대학</div>
-            <div class="select">
-            <select id="college" name="college" onchange="selectDepartments()" required>
-                <option value="" selected disabled>단과대</option>
-                <option value="불교대학">불교대학</option>
-                <option value="문과대학">문과대학</option>
-                <option value="이과대학">이과대학</option>
-                <option value="법과대학">법과대학</option>
-                <option value="사회과학대학">사회과학대학</option>
-                <option value="경찰사법대학">경찰사법대학</option>
-                <option value="경영대학">경영대학</option>
-                <option value="바이오시스템대학">바이오시스템대학</option>
-                <option value="공과대학">공과대학</option>
-                <option value="AI융합대학">AI융합대학</option>
-                <option value="사범대학">사범대학</option>
-                <option value="예술대학">예술대학</option>
-                <option value="약학대학">약학대학</option>
-                <option value="미래융합대학">미래융합대학</option>
-            </select>
+        <select id="department" name="department" required>
+          <option value="" selected disabled>학과</option>
+        </select>
+      </div>
+    </section>
 
-            <select id="department" name="department" required>
-                <option value="" selected disabled>학과</option>
-            </select>
-            </div>
-        </section>
-
-        <section class="bottom item">
-            <div class="label">내 소모임</div>
-{%if somds%}
-    <div class="somd_list">
+    <section class="bottom item">
+      <div class="label">내 소모임</div>
+      {%if somds%}
+      <div class="somd_list">
         {% for somd in somds %}
         <div class="text">
             <div class="name">{{ somd.name }}</div>
-            <i class="fa-regular fa-star"></i>
+            <!-- <i class="fa-regular fa-star"></i> -->
         </div>
         {% endfor %}
-    </div>
+      </div>
 
 {% else %}
     <div class="text">
@@ -94,53 +127,186 @@
         </section>
     </form>
 
-    <a href="{% url 'accounts:deleteUser' %}">탈퇴</a>
-</section>
-
-
-<script>
+    <div>
+      <button class="secession" onClick="openPopup()" id="resign">탈퇴</button>
+    </div>
+  </section>
+  
+  <script>
     // 각 단과대에 해당하는 학과 목록
     const departmentsByCollege = {
-        불교대학: ['불교학부', '문화재학과'],
-        문과대학: ['국어국문문예창작학부', '영어영문학전공', '영어통번역학전공', '일본학과', '중어중문학과', '철학과', '사학과'],
-        이과대학: ['수학과', '화학과', '통계학과', '물리반도체과학부'],
-        법과대학: ['법학과'],
-        사회과학대학: ['정치외교학전공', '행정학전공', '북한학전공', '경제학과', '국제통상학과', '사회학전공', '미디어커뮤니케이션학전공', '식품산업관리학과', '광고홍보학과', '사회복지학과'],
-        경찰사법대학: ['경찰행정학부'],
-        경영대학: ['경영학과', '회계학과', '경영정보학과'],
-        바이오시스템대학: ['바이오환경학과', '생명과학과', '식품생명공학과', '의생명공학과'],
-        공과대학: ['전자전기공학부', '정보통신공학과', '건설환경공학과', '화공생물공학과', '기계로봇에너지공학과', '건축공학전공', '건축학전공', '산업시스템공학과', '융합에너지신소재공학과'],
-        AI융합대학: ['AI소프트웨어융합학부', '컴퓨터공학전공', '멀티미디어소프트웨어공학전공', '인공지능전공', '데이터사이언스전공', '엔터테인먼트테크놀로지전공'],
-        사범대학: ['교육학과', '국어교육과', '역사교육과', '지리교육과', '수학교육과', '가정교육과', '체육교육과'],
-        예술대학: ['미술학부', '연극학부', '영화영상학과', '스포츠문화학과', '한국음악과'],
-        약학대학: ['약학과'],
-        미래융합대학: ['융합보안학과', '사회복지상담학과', '글로벌무역학과'],
+      불교대학: ["불교학부", "문화재학과"],
+      문과대학: [
+        "국어국문문예창작학부",
+        "영어영문학전공",
+        "영어통번역학전공",
+        "일본학과",
+        "중어중문학과",
+        "철학과",
+        "사학과",
+      ],
+      이과대학: ["수학과", "화학과", "통계학과", "물리반도체과학부"],
+      법과대학: ["법학과"],
+      사회과학대학: [
+        "정치외교학전공",
+        "행정학전공",
+        "북한학전공",
+        "경제학과",
+        "국제통상학과",
+        "사회학전공",
+        "미디어커뮤니케이션학전공",
+        "식품산업관리학과",
+        "광고홍보학과",
+        "사회복지학과",
+      ],
+      경찰사법대학: ["경찰행정학부"],
+      경영대학: ["경영학과", "회계학과", "경영정보학과"],
+      바이오시스템대학: [
+        "바이오환경학과",
+        "생명과학과",
+        "식품생명공학과",
+        "의생명공학과",
+      ],
+      공과대학: [
+        "전자전기공학부",
+        "정보통신공학과",
+        "건설환경공학과",
+        "화공생물공학과",
+        "기계로봇에너지공학과",
+        "건축공학전공",
+        "건축학전공",
+        "산업시스템공학과",
+        "융합에너지신소재공학과",
+      ],
+      AI융합대학: [
+        "AI소프트웨어융합학부",
+        "컴퓨터공학전공",
+        "멀티미디어소프트웨어공학전공",
+        "인공지능전공",
+        "데이터사이언스전공",
+        "엔터테인먼트테크놀로지전공",
+      ],
+      사범대학: [
+        "교육학과",
+        "국어교육과",
+        "역사교육과",
+        "지리교육과",
+        "수학교육과",
+        "가정교육과",
+        "체육교육과",
+      ],
+      예술대학: [
+        "미술학부",
+        "연극학부",
+        "영화영상학과",
+        "스포츠문화학과",
+        "한국음악과",
+      ],
+      약학대학: ["약학과"],
+      미래융합대학: ["융합보안학과", "사회복지상담학과", "글로벌무역학과"],
     };
-
+  
     // 학과 드롭다운을 업데이트하는 함수
     function selectDepartments() {
-        const collegeSelect = document.getElementById('college');
-        const departmentSelect = document.getElementById('department');
-        const selectedCollege = collegeSelect.value;
-
-        // 기존 학과 목록 초기화
-        departmentSelect.innerHTML = '<option value="" selected disabled>학과</option>';
-
-        // 선택된 단과대에 해당하는 학과 목록 생성
-        if (selectedCollege && departmentsByCollege[selectedCollege]) {
+      const collegeSelect = document.getElementById("college");
+      const departmentSelect = document.getElementById("department");
+      const selectedCollege = collegeSelect.value;
+  
+      // 기존 학과 목록 초기화
+      departmentSelect.innerHTML =
+        '<option value="" selected disabled>학과</option>';
+  
+      // 선택된 단과대에 해당하는 학과 목록 생성
+      if (selectedCollege && departmentsByCollege[selectedCollege]) {
         const departments = departmentsByCollege[selectedCollege];
         for (const department of departments) {
-            const option = document.createElement('option');
-            option.value = department;
-            option.text = department;
-            departmentSelect.appendChild(option);
+          const option = document.createElement("option");
+          option.value = department;
+          option.text = department;
+          departmentSelect.appendChild(option);
         }
+      }
     }
-}
-
-document.querySelector("#college").value = ("{{ user.profile.college }}");
-selectDepartments()
-document.querySelector("#department").value = ("{{ user.profile.department }}");
-
-</script>
-{% endblock %}
+  
+    document.querySelector("#college").value = "{{ user.profile.college }}";
+    selectDepartments();
+    document.querySelector("#department").value = "{{ user.profile.department }}";
+  
+    const profilePicInput = document.getElementById("profile-pic-input");
+    const profilePicPreview = document.querySelector(".profile-pic-preview");
+  
+    profilePicInput.addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+  
+      reader.addEventListener("load", function (event) {
+        profilePicPreview.style.backgroundImage = `url(${event.target.result})`;
+      });
+  
+      reader.readAsDataURL(file);
+    });
+  
+    // 팝업을 열기 위한 함수
+    // user.profile.profile_pic.url
+    function openPopup() {
+      event.preventDefault();
+      // 팝업 내용을 구성하는 HTML 코드
+      var popupContent = `
+          <div class="popup">
+              <div class="popupAlert">
+                  <i class="fas fa-exclamation-triangle"></i>
+                  <span>정말로 탈퇴하시겠습니까?</span>
+              </div>    
+              <div class="popupButton">
+                  <button onclick="deleteUser()">탈퇴</button>
+                  <button onclick="closePopup()">닫기</button>    
+              </div>
+          </div>
+      `;
+  
+      // 팝업을 표시할 요소를 생성하고 내용을 설정
+      var popupElement = document.createElement("div");
+      popupElement.classList.add("popup-container");
+      popupElement.innerHTML = popupContent;
+  
+      // body에 팝업을 추가
+      document.body.appendChild(popupElement);
+      centerPopup();
+    }
+  
+    function deleteUser() {
+      // 사용자 삭제 동작 수행
+      window.location.href = "{% url 'accounts:deleteUser' %}";
+    }
+  
+    // 팝업을 중앙에 위치시키는 함수
+    function centerPopup() {
+      var popupContainer = document.querySelector(".popup-container");
+      var popup = document.querySelector(".popup");
+  
+      var windowHeight = window.innerHeight;
+      var popupHeight = popup.offsetHeight;
+  
+      var top = Math.max((windowHeight - popupHeight) / 2, 0);
+  
+      popupContainer.style.justifyContent = top + "px";
+    }
+  
+    // 팝업을 닫기 위한 함수
+    function closePopup() {
+      // 팝업을 닫을 요소를 찾아 제거합니다.
+      var popupElement = document.querySelector(".popup-container");
+      popupElement.remove();
+    }
+  
+    // 작성자 정보 버튼 클릭 시 팝업을 열기 위한 이벤트 처리
+    var resignButton = document.querySelectorAll("#resign");
+    resignButton.addEventListener("click", openPopup());
+    //   resignButton.forEach(function (button) {
+    //     button.addEventListener("click", function () {
+    //       openPopup();
+    //     });
+    //   });
+  </script>
+  
+  {% endblock %}

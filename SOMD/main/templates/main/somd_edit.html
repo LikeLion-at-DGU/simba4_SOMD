@@ -4,9 +4,11 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/somd_register.css' %}">
 <section class="header">
     <section class="mainTitle">
-        <div class="historyBack"><i class="fa-solid fa-chevron-left"></i></div>
-        <!-- <i class="fa-solid fa-house"></i> -->
-        <div>솜디 수정하기</div>
+        <a href="{% url 'main:mainfeed' somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <!-- <div>{{ somd.name }}</div> -->
+        <button class="header_button-2" button type="submit" form="somd_edit">
+            <i class="fa-solid fa-check"></i> 솜디수정완료
+        </button>
     </section>
 </section>
 <section class="EmptyForHeader"></section>
@@ -14,18 +16,18 @@
 
 <section class="somdPage">
 
-    <form action="{% url 'main:somd_update' somd.id %}" method="POST" enctype="multipart/form-data">
+    <form id="somd_edit" action="{% url 'main:somd_update' somd.id %}" method="POST" enctype="multipart/form-data">
         <section class="somd_register">
         {% csrf_token %}
         <section class="feed_header">
-            <div class="back-pic-preview background image">
+            <div class="back-pic-preview background image" style="background-image:url({{somd.backgroundimage.url}});">
                 <i class="fa-regular fa-image"></i>
                 <label for="back-pic-input">
                     <input type="file" accept="image/*" name="back_pic" id="back-pic-input">
                 </label>
             </div>
             
-            <div class="profile-pic-preview profile image">
+            <div class="profile-pic-preview profile image" style="background-image:url({{somd.profileimage.url}});">
                 <i class="fa-regular fa-image"></i>
                 <label for="profile-pic-input">
                     <input type="file" accept="image/*" name="profile_pic" id="profile-pic-input">
@@ -97,37 +99,37 @@
             </section>
 
         </section>
-        
-        <button type="submit">등록</button>
     </section>
     </section> 
     </form>
 </section>
 
 
-    <script>
-        const profilePicInput = document.getElementById('profile-pic-input');
-        const profilePicPreview = document.querySelector('.profile-pic-preview');
+<script>
 
-        profilePicInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-    
-            reader.addEventListener('load', function(event) {
-                profilePicPreview.style.backgroundImage = `url(${event.target.result})`;
-        });
-    
-        reader.readAsDataURL(file);
+const profilePicInput = document.getElementById('profile-pic-input');
+const profilePicPreview = document.querySelector('.profile-pic-preview');
+
+profilePicInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function(event) {
+        profilePicPreview.style.backgroundImage = `url(${event.target.result})`;
     });
-        const backPicInput = document.getElementById('back-pic-input');
-        const backPicPreview = document.querySelector('.back-pic-preview');
-        backPicInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
 
-            reader.addEventListener('load', function(event) {
-                backPicPreview.style.backgroundImage = `url(${event.target.result})`;
-        });
+    reader.readAsDataURL(file);
+});
+
+const backPicInput = document.getElementById('back-pic-input');
+const backPicPreview = document.querySelector('.back-pic-preview');
+backPicInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function(event) {
+        backPicPreview.style.backgroundImage = `url(${event.target.result})`;
+    });
 
     reader.readAsDataURL(file);
 });

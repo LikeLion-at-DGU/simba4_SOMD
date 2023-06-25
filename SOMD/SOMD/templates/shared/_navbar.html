@@ -25,7 +25,7 @@
     
         <section class="linkList">
             <a href="{% url 'users:mypage' %}">마이페이지</a>
-            <a class="icon" href="{% url 'main:mainpage' %}">스크랩한 게시물</a>
+            <a class="icon" href="{% url 'main:scrap_view' %}">스크랩한 게시물</a>
         </section>
     </section>
 {% endif %}
@@ -51,12 +51,13 @@
 
         <!-- 솜디 게시판 링크 연결 -->
         <a class="icon" href="{% url 'main:board' %}">
-            <div class="boardIcon">
+            <!-- <div class="boardIcon">
                 <i class="fa-solid fa-stop"></i>
                 <i class="fa-solid fa-stop"></i>
                 <i class="fa-solid fa-stop"></i>
                 <i class="fa-solid fa-stop"></i>
-            </div>
+            </div> -->
+            <i class="boardIcon fa-solid fa-magnifying-glass"></i>
             <!-- <i class="fa-solid fa-grid-2"></i> -->
             <!-- <div class="text">전체솜디</div> -->
         </a>
