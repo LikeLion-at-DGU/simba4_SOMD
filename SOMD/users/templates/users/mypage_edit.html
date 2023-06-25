@@ -6,9 +6,8 @@
 
 <section class="header">
     <section class="mainTitle">
-        <div class="historyBack"><i class="fa-solid fa-chevron-left"></i></div>
-        <!-- <i class="fa-solid fa-house"></i> -->
-        <div>{{ somd.name }}</div>
+        <a href="{% url 'users:mypage' %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <div></div>
         <button type="submit" form="mypage_edit">제출</button>
     </section>
 </section>
@@ -16,11 +15,16 @@
 
 
 <section class="somdPage">
-    <form id="mypage_edit" class="mypage" action = "{% url 'users:mypage_update' %}" method="post">
+    <form id="mypage_edit" class="mypage" action = "{% url 'users:mypage_update' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <section class="top">
-            <!-- <div class="label">프로필 사진</div> -->
-            <div class="image" style="background-image:url({{user.profile.profile_pic.url}});"></div>
+            <div class="profile-pic-preview profile image" style="background-image:url({{user.profile.profile_pic.url}});">
+                <i class="fa-regular fa-image"></i>
+                <label for="profile-pic-input">
+                    <input type="file" accept="image/*" name="profile_pic" id="profile-pic-input">
+                </label>
+            </div>
+
         </section>
 
         <section class="middle">
@@ -41,7 +45,7 @@
 
         <section class="item">
             <div class="label">자기소개</div>
-            <input class="long text" type="text" name="intro" value="{{ user.profile.intro }}" >
+            <textarea class="long text" type="text" name="intro" value="{{ user.profile.intro }}" ></textarea>
         </section>
 
 
@@ -142,5 +146,18 @@ document.querySelector("#college").value = ("{{ user.profile.college }}");
 selectDepartments()
 document.querySelector("#department").value = ("{{ user.profile.department }}");
 
+const profilePicInput = document.getElementById('profile-pic-input');
+const profilePicPreview = document.querySelector('.profile-pic-preview');
+
+profilePicInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function(event) {
+        profilePicPreview.style.backgroundImage = `url(${event.target.result})`;
+    });
+
+    reader.readAsDataURL(file);
+});
 </script>
 {% endblock %}

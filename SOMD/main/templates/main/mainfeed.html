@@ -7,31 +7,17 @@
 
 <section class="header">
     <section class="mainTitle">
-        <div class="historyBack"><i class="fa-solid fa-chevron-left"></i></div>
+        <a href="{% url 'main:board' %}"><i class="fa-solid fa-chevron-left"></i></a>
         <!-- <i class="fa-solid fa-house"></i> -->
         <div>{{ somd.name }}</div>
-
-        <div class="button_case">
-            {% if somd.admin.id == user.id %}
-                <a class="button" href="{% url 'main:members' somd.id %}">관리하기</a>
-                <a class="button" href="{% url 'main:somd_edit' somd.id %}">수정하기</a>
-            {% endif %}
-
-            {% if user in somd.waitTojoin_members.all %}
-            <a class="button" href="">가입대기중</a>
-            {% elif not user in somd.join_members.all %}
-                <a class="button" href="{% url 'main:join' somd.id %}">가입하기</a>
-            {% endif %}
-            
-        </div>
-
     </section>
 </section>
 <section class="EmptyForHeader"></section>
 
 <section class="somdPage">
+    {% if user in somd.join_members.all %}
     <a class="writeButton" href="{% url 'main:new' somd.id%}"><i class="fa-solid fa-pen"></i></a>
-
+    {%endif%}
     <section class="mainfeed">
         <section class="feed_header">
             {% if somd.backgroundimage %}
@@ -40,10 +26,25 @@
             {% else %}
             <div class="background image">
             {% endif %}
-                <a class="bookmark"><i class="fa-regular fa-star"></i></a>
-                <div class="info">
+            
+
+            <a class="bookmark" href="{% url 'main:bookmark' somd.id %}">
+                {% if is_user_bookmarked %}
+                    <i class="fa-regular fa-star" style="color: blue;"></i>
+                {% else %}
+                    <i class="fa-regular fa-star"></i>
+                {% endif %}
+            </a>
+            
+            {% comment %} <a class="bookmark"><i class="fa-regular fa-star"></i></a> {% endcomment %}
+            
+            <div class="info">
                     <div>{{somd.college}}</div>
-                    <div>{{ somd.department }}</div>
+                    <div>
+                        {% if somd.department != "-" %} 
+                            {{ somd.department}}
+                        {% endif %} 
+                    </div>
                 </div>
             </div>
 
@@ -58,26 +59,39 @@
 
             <div class="info">
                 <div class="name">{{ somd.name }}</div>
-                <div>{{ somd.intro }}</div>
+                <div class="intro">{{ somd.intro }}</div>
                 <!-- <div>{{ somd.admin.username }}</div> -->
+            </div>
+            
+            {% if somd.tags.all|length != 0 %}
+            <div class="row_tag_box">
+                <div class="row_tag_box_for_scroll">
+                        {%for tag in somd.tags.all%}
+                            <div class="tag_label">{{ tag.name }}</div>
+                        {%endfor%}
+                </div>
+            </div>
+            {%endif%}
+
+            <div class="button_case">
+                {% if somd.admin.id == user.id %}
+                    <a class="button_a button2" href="{% url 'main:members' somd.id %}">멤버관리</a>
+                    <a class="button_a button2" href="{% url 'main:somd_edit' somd.id %}">솜디수정</a>
+                {% endif %}
+
+                {% if user in somd.waitTojoin_members.all %}
+                <div class="button_a button1 wait" href="">가입대기중</div>
+                {% elif not user in somd.join_members.all %}
+                    <a class="button_a button1" href="{% url 'main:join' somd.id %}">가입하기</a>
+                {% endif %}
             </div>
         </section>
 
-        <div class="row_tag_box">
-            <div class="row_tag_box_for_scroll">
-                {% if somd.tags %}
-                    {%for tag in somd.tags.all%}
-                        <div class="tag_label">{{ tag.name }}</div>
-                    {%endfor%}
-                {%endif%}
-            </div>
-        </div>
-
         <section class="option">
-            <form class="search">
+            <!-- <form class="search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input type="text">
-            </form>
+            </form> -->
             <div class="view postContainer_control">
                 <i class="fa-solid fa-image"></i>
                 <i class="fa-solid fa-list"></i>
@@ -85,21 +99,82 @@
         </section>
         
         <section class="postContainer linebyline_post">
+            {% if fixed_posts %} <!--고정한 포스트가 있을 경우-->
+            <div class="postContainer_title">notice</div>
             <div class="list">
-                {% if posts %}
-                {% for post in posts %}
-                <a class="post_box" href="{% url 'main:viewpost' post.id %}">
+                {% for post in fixed_posts %}
+                <div class="post_box">
                     <section class="post_header">
                         <div class="profile">
                             <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
                             <div class="name">{{ post.writer.profile.nickname }}</div>
                         </div>
                         <div class="icon">
-                            <i class="fa-solid fa-thumbtack"></i>
-                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                            {% if somd.admin.id == user.id %}
+                            <i class="fa-solid fa-thumbtack" style="color: #0ECC87;" onClick="location.href='{% url 'main:fix' post.id somd.id %}'"></i>
+                            {% else %}
+                            <i class="fa-solid fa-thumbtack" style="color: #0ECC87;"></i>
+                            {% endif %}
+                            <!-- <i class="fa-solid fa-ellipsis-vertical"></i> -->
                         </div>
                     </section>
-                    <div class="about_post">
+
+                    <a class="about_post"  href="{% url 'main:viewpost' post.id %}">
+
+                        {% if post.images.all %}
+                            <div class="image" style="background-image:url( {{ post.images.first.image.url }} );">
+                            {% if post.images.all|length > 1 %}
+                                <div class="image_more">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                            {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="nonimage"></div>
+                        {% endif %}
+                        <div class="text">
+                            <div class="title">{{ post.title }}</div>
+                            <div class="body">{{ post.summary }}</div>
+                        </div>
+                    </a>
+                    <section class="post_footer">
+                        <div class="icon">
+                            <div class="like">
+                                <i class="fa-solid fa-heart"></i>
+                                <div>10</div>
+                            </div>
+                            <div class="comment">
+                                <i class="fa-regular fa-message"></i>
+                                <div>10</div>
+                            </div>
+                        </div>
+
+
+                    </section>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}  <!--고정한 포스트가 있을 경우-->
+
+            {% if posts %} <!--고정 안한 포스트가 없을 경우-->
+            <div class="postContainer_title">post</div>
+            <div class="list">
+                {% for post in posts %}
+                <div class="post_box">
+                    <section class="post_header">
+                        <div class="profile">
+                            <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
+                            <div class="name">{{ post.writer.profile.nickname }}</div>
+                        </div>
+                        <div class="icon">
+                            {% if somd.admin.id == user.id %}
+                            <i class="fa-solid fa-thumbtack" onClick="location.href='{% url 'main:fix' post.id somd.id %}'"></i>
+                            {% endif %}
+                            <!-- <i class="fa-solid fa-ellipsis-vertical"></i> -->
+                        </div>
+                    </section>
+
+                    <a class="about_post"  href="{% url 'main:viewpost' post.id %}">
 
                         {% if post.images.all %}
                             
@@ -117,7 +192,7 @@
                             <div class="title">{{ post.title }}</div>
                             <div class="body">{{ post.summary }}</div>
                         </div>
-                    </div>
+                    </a>
                     <section class="post_footer">
                         <div class="icon">
                             <div class="like">
@@ -130,67 +205,22 @@
                             </div>
                         </div>
 
-                        <div class="scrap">
-                            <i class="fa-regular fa-bookmark"></i>
-                        </div>
 
                     </section>
-                </a>
+                </div>
                 {% endfor %}
                 {% else %}
                 <section class="warning">아직 포스트가 없습니다!</section>
-                {% endif %}
+            </div>
+            {% endif %}
+           
         </section>
     
     </section> 
 
 </section>
 
-
-<script>
-const postContainer_control = document.querySelector('.postContainer_control');
-const postContainer_control_list = postContainer_control.querySelector('.fa-list');
-const postContainer_control_feed = postContainer_control.querySelector('.fa-image');
-let postContainer_control_state = "리스트";
-postContainer_control_feed.style.color = "lightgrey";
-// console.log("dd" + postContainer_control);
-
-postContainer_control.addEventListener('click', function(event){
-
-if(event.target == postContainer_control ||event.target  == postContainer_control_list || event.target == postContainer_control_feed){
-    // console.log(event.target);
-    let postContainer = document.querySelector(".postContainer");
-    let nonImages = postContainer.getElementsByClassName("nonimage");
-    // console.log(nonImages)
-    if(postContainer_control_state == "리스트"){
-        postContainer_control_state = "피드";
-        postContainer_control_feed.style.color = "grey";
-        postContainer_control_list.style.color = "lightgrey";
-        postContainer.className = "postContainer album_post"
-        // postContainer_control_icon.className = "fa-solid fa-list";
-
-        for(image of nonImages){
-            image.parentNode.parentNode.style.display = "none";
-        }
-    }
-    else if (postContainer_control_state == "피드"){
-        postContainer_control_state = "리스트"
-        postContainer_control_list.style.color = "grey";
-        postContainer_control_feed.style.color = "lightgrey";
-        postContainer.className = "postContainer linebyline_post";
-        
-        // postContainer_control_icon.className = "fa-solid fa-image";
-
-        for(image of nonImages){
-            image.parentNode.parentNode.style.display = "block";
-        }
-    }
-    
-    // console.log(postContainer_control_state);
-}
-});
-
-</script>
+<script src="{% static 'js/postContainer.js' %}"></script>
 
 {% endblock %}
 

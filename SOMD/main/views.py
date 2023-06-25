@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count 
-from .models import Post, Comment, Tag, SOMD, Member, Images, JoinRequest
+from .models import Post, Comment, Tag, SOMD, Member, Images, JoinRequest, UserAlram, Alram
 from django.contrib.auth.models import User
 from django.utils import timezone
 import re
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
-
-
 
 # Create your views here.
 
@@ -17,14 +15,23 @@ def mainpage(request):
         user = request.user
         members = Member.objects.filter(user=user)
         somds = SOMD.objects.filter(members__in=members)
+
+        posts = Post.objects.filter(somd__in =somds)
         if somds:
-            return render(request, 'main/mainpage.html', {'somds': somds})
+            posts = posts.order_by('-pub_date')
+            return render(request, 'main/mainpage.html', {
+                'somds': somds,
+                'posts' : posts
+                
+            })
     return render(request, 'main/mainpage.html')
 
     
 def board(request):
-    somds = SOMD.objects.all()
+    #somds = SOMD.objects.all()
+    somds = SOMD.objects.annotate(totalMember=Count('members')).order_by('-totalMember')
     tags = Tag.objects.all()
+    
     return render(request, 'main/board.html', {
         "somds": somds,
         "tags": tags,
@@ -43,19 +50,11 @@ def createSOMD(request):
         new_somd = SOMD()
         if "back_pic" in request.FILES:
             new_somd.backgroundimage = request.FILES["back_pic"]
-        else:
-            default_image_path = "somd/somdbackDefaultImage.png"
-            default_image_content = default_storage.open(default_image_path).read()
-            default_image_file = ContentFile(default_image_content)
-            new_somd.backgroundimage.save("somdbackDefaultImage.png", default_image_file)
+        
         
         if "profile_pic" in request.FILES:
             new_somd.profileimage = request.FILES["profile_pic"]
-        else:
-            default_profile_image_path = "somd/somdDefaultImage.png"
-            default_profile_image_content = default_storage.open(default_profile_image_path).read()
-            default_profile_image_file = ContentFile(default_profile_image_content)
-            new_somd.profileimage.save("somdDefaultImage.png", default_profile_image_file)
+        
     
         new_somd.name = request.POST["somdname"]
 
@@ -75,7 +74,7 @@ def createSOMD(request):
 
         member, created = Member.objects.get_or_create(user=user)
         member.somds.add(new_somd)
-        new_somd.admins.set([request.user])
+        # new_somd.admins.set([request.user])
         
         new_somd.join_members.add(request.user)
         
@@ -98,19 +97,10 @@ def somd_update(request, id):
     
     if "back_pic" in request.FILES:
         update_somd.backgroundimage = request.FILES["back_pic"]
-    else:
-        default_image_path = "somd/somdbackDefaultImage.png"
-        default_image_content = default_storage.open(default_image_path).read()
-        default_image_file = ContentFile(default_image_content)
-        update_somd.backgroundimage.save("somdbackDefaultImage.png", default_image_file)
+    
 
     if "profile_pic" in request.FILES:
         update_somd.profileimage = request.FILES["profile_pic"]
-    else:
-        default_profile_image_path = "somd/somdDefaultImage.png"
-        default_profile_image_content = default_storage.open(default_profile_image_path).read()
-        default_profile_image_file = ContentFile(default_profile_image_content)
-        update_somd.profileimage.save("somdDefaultImage.png", default_profile_image_file)
 
     update_somd.name = request.POST["somdname"]
 
@@ -136,15 +126,15 @@ def somd_update(request, id):
     return redirect("main:mainfeed", update_somd.id)
 
 
-
 def mainfeed(request, id):
-    # user = request.user
-    # member = Member.objects.get(user=user)
     somd = SOMD.objects.get(id=id)
-    posts = somd.somds.all()
+    posts = somd.posts.filter(is_fixed=False)
+    fixed_posts = somd.posts.filter(is_fixed=True)
+
     return render(request, "main/mainfeed.html", {
         'somd': somd,
-        'posts':posts
+        'posts': posts,
+        'fixed_posts': fixed_posts,
     })
 
 def mysomd(request):
@@ -190,7 +180,7 @@ def createpost(request, somd_id):
                 new_image = Images.objects.create(post=new_post, image=image)
 
             return render(request, 'main/viewpost.html', {'post': new_post, 'images': new_post.images.all()})
-        
+
 
 def join(request, id):
     somd = SOMD.objects.get(id=id)
@@ -240,19 +230,44 @@ def members_wantTojoin(request, somd_id, request_id):
             somd.join_members.add(joinrequest.writer)
             somd.waitTojoin_members.remove(joinrequest.writer)
             member.somds.add(somd)
+
+            receiveUser, created = UserAlram.objects.get_or_create(user=joinrequest.writer)
+            
+            alram = Alram()
+            alram.type ="somdAccept"
+            alram.sendUser = (request.user)
+            alram.somd = (somd)
+            alram.date = timezone.now()
+
+            alram.save()
+
+            receiveUser.alrams.add(alram)
             
         elif "reject" == request.POST["wantTojoin_result"] :
             somd.waitTojoin_members.remove(joinrequest.writer)
             member.rejected_somds.add(somd)
+
+            #유저에게 알람 전달
+            receiveUser, created = UserAlram.objects.get_or_create(user=joinrequest.writer)
+            
+            alram = Alram()
+            alram.type ="somdReject"
+            alram.sendUser = (request.user)
+            alram.somd = (somd)
+            alram.date = timezone.now()
+
+            alram.save()
+
+            receiveUser.alrams.add(alram)
+
+
 
         somd.join_requests.remove(joinrequest)
         joinrequest.delete()
 
         member.waiting_somds.remove(somd)
 
-    return render(request, "main/members.html", {
-        'somd': somd,
-    })
+    return redirect("main:members", somd.id)
 
 
 def members_delete(request, somd_id, join_user_id):
@@ -264,9 +279,7 @@ def members_delete(request, somd_id, join_user_id):
     somd.join_members.remove(join_user)
     member.rejected_somds.add(somd)
 
-    return render(request, "main/members.html", {
-        'somd': somd,
-    })
+    return redirect("main:members", somd.id)
 
 
 def viewpost(request, post_id):
@@ -275,7 +288,6 @@ def viewpost(request, post_id):
         images = post.images.all()
         comments = Comment.objects.filter(post=post)
         num_likes = post.like.count()
-        
         # 댓글수!!!!!!!!!;;
         num_comments = comments.count()
         
@@ -286,6 +298,9 @@ def viewpost(request, post_id):
             'num_likes': num_likes,
             'num_comments': num_comments,
         })
+        
+        
+        
     elif request.method == 'POST':
         if request.user.is_authenticated:
             new_comment = Comment()
@@ -294,42 +309,64 @@ def viewpost(request, post_id):
             new_comment.content = request.POST["comment"]
             new_comment.pub_date = timezone.now()
             new_comment.save()
-            
+            # post.comment.count()
+            # post.update_num_comments()
+
             return redirect('main:viewpost', post.id)
 
-def bookmark(request,SOMD_id):
-    bookmarked_somd = get_object_or_404(SOMD, pk=id)
-    user = request.user
-    is_user_bookmarked = user.bookmark.filter(id=bookmarked_somd.id).exists()
+# def bookmark(request,SOMD_id):
+#     bookmarked_somd = get_object_or_404(SOMD, pk=id)
+#     user = request.user
+#     is_user_bookmarked = user.bookmark.filter(id=bookmarked_somd.id).exists()
     
-    if is_user_bookmarked:
-        user.bookmark.add(bookmarked_somd) 
-        bookmarked = True
+#     if is_user_bookmarked:
+#         user.bookmark.add(bookmarked_somd) 
+#         bookmarked = True
     
-    else:
-        user.bookmark.remove(bookmarked_somd)
-        bookmarked = False
+#     else:
+#         user.bookmark.remove(bookmarked_somd)
+#         bookmarked = False
         
-    return redirect('main:mysomd', bookmarked_somd.id) #??어디로 redirect??
+#     return redirect('main:mysomd', bookmarked_somd.id) #??어디로 redirect??
+
+def bookmark(request, somd_id):
+    somd = SOMD.objects.get(id=somd_id)
+    user = request.user
+    is_user_bookmarked = user.bookmark.filter(id=somd.id).exists()
+
+    if is_user_bookmarked:
+        user.bookmark.remove(somd) 
+    else:
+        user.bookmark.add(somd)
+    user.save()
+    return redirect('main:mainfeed', somd.id)
+
 
 
 
     
-    
-def Scrap(request, post_id):
+def bookmark_view(request):
+    user = request.user
+    somds = user.bookmark.all()
+    return render(request, 'main/mysomd.html', {'somds':somds})
+
+
+def scrap(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     user = request.user
     is_user_scraped = user.scrap.filter(id=post.id).exists()
     
     if is_user_scraped:
-        user.scrap.add(post) 
-        scraped = True
-    
+        user.scrap.remove(post) 
     else:
-        user.scrap.remove(post)
-        scraped = False
-        
+        user.scrap.add(post)
+    user.save()
     return redirect('main:viewpost', post.id)
+
+def scrap_view(request):
+    user = request.user
+    posts = user.scrap.all()
+    return render(request, 'main/scrappedPost_view.html', {'posts':posts})
 
 
 def like_post(request, post_id):
@@ -343,10 +380,9 @@ def like_post(request, post_id):
     return redirect('main:viewpost', post_id)
 
 
-def CountSomdMember(request):
-    somds = SOMD.objects.annotate(num_members=Count('members')).order_by('-num_members')[:7]
-    return render(request, 'main/board.html', {"somds": somds})
-
+# def CountSomdMember(request):
+#     somds = SOMD.objects.annotate(num_members=Count('members')).all()
+#     return render(request, 'main/board.html', {"somds": somds})
 
 # def JoinRequest(request):
 #         new_join_request = JoinRequest()
@@ -362,3 +398,20 @@ def CountSomdMember(request):
 #         join_request.save()  
         
 #         return redirect('가입완료페이지')
+
+def fix(request, post_id, somd_id):
+    post = get_object_or_404(Post, id=post_id)
+    if post.is_fixed:
+        post.is_fixed = False
+    else:
+        post.is_fixed = True
+    post.save()
+    
+    return redirect('main:mainfeed', id = somd_id)
+
+
+def alram(request):
+    alrams, created = UserAlram.objects.get_or_create(user=request.user)
+    return render(request, "main/alram.html", {
+        'alrams': alrams,
+    })

@@ -18,6 +18,7 @@ def mypage(request):
 
 def mypage_edit(request):
     user = request.user
+
     try:
         member = Member.objects.get(user=user)
     except Member.DoesNotExist:
@@ -31,7 +32,12 @@ def mypage_edit(request):
     })
 
 def mypage_update(request):
+
     update_user = request.user
+
+    if "profile_pic" in request.FILES:
+        update_user.profile.profile_pic = request.FILES["profile_pic"]
+        
     # update_user.profile.name = request.POST['name']
     update_user.profile.nickname = request.POST['nickname']
     # update_user.profile.gender = request.POST['gender']

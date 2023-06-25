@@ -5,9 +5,12 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/board.css' %}">
 <section class="header">
     <section class="mainTitle">
-        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-server"></i>
+
         <div>솜디게시판</div>
-        <a class="button" href="{% url 'main:register' %}">SOM D 등록</a>
+        <a class="header_button" href="{% url 'main:register' %}">
+            <i class="fa-solid fa-plus"></i> SOM D 등록
+        </a>
     </section>
 </section>
 <section class="EmptyForHeader"></section>
@@ -36,7 +39,7 @@
     <section class="option">
         <div class="row_tag_box">
             <div class="row_tag_box_for_scroll">
-
+                <div class="notice">태그를 사용해 소모임을 찾아보세요!</div>
             </div>
         </div>
         <button onclick="filterBtn_click(event)"><i class="fa-solid fa-filter"></i></button>
@@ -68,9 +71,9 @@
 
     <section class="all_somdList">
         <section class="search_somdList_for_you  middleSomdList"></section>
-        <span class="button">우리대학</span>
+        <!-- <div class="section_title">우리대학</div> -->
         <section class="all_somdList_for_you"></section>
-        <span class="button">다른대학</span>
+        <div class="section_title">둘러보기</div>
     </section>
 </section>  
 
@@ -93,11 +96,17 @@ const departmentsByCollege = {
     약학대학: ['-','약학과'],
     미래융합대학: ['-','융합보안학과', '사회복지상담학과', '글로벌무역학과'],
 };
+// console.log(departmentsByCollege)
 
 if("{{ user.profile.college }}" != ""){
-    departmentsByCollege["{{ user.profile.college}}"].splice(1,0,"{{ user.profile.department }}");
-
+    let index = departmentsByCollege["{{ user.profile.college}}"].indexOf("{{ user.profile.department }}",0)
+    
+    departmentsByCollege["{{ user.profile.college}}"].splice(index,1)
+    departmentsByCollege["{{ user.profile.college}}"].splice(1,0,"{{ user.profile.department}}");
+    // department_ByCollege
 }
+
+console.log(departmentsByCollege)
 
 //----유저 솜디 기본 설정하기
 var college_somd ={};
@@ -141,7 +150,7 @@ for (const college in departmentsByCollege){
     const departments = departmentsByCollege[college]
     let collegeTitle_box = document.createElement("section");
     collegeTitle_box.className ="collegeTitle_box";
-    if(college == "{{user.profile.college}}"){
+    if(college == "{{user.profile.college}}" || college =="동국대학교"){
         allsomdList_forYou.append(collegeTitle_box);
     }
     else{
@@ -351,7 +360,12 @@ function searchBtn_click(event){
 
     let list = document.createElement("section");
     list.className = "list"
-
+    if(search_tag.length == 0){
+        let no_tag = document.createElement("div")
+        no_tag.className = ("notice");
+        no_tag.innerText ="선택된 태그가 없습니다!"
+        row_tag_box.appendChild(no_tag);
+    }
     if(search_results.length != 0){
         // console.log(department);
 
@@ -380,7 +394,7 @@ function searchBtn_click(event){
         let warning = document.createElement("a");
         warning.className ="warning";
         warning.href = "{% url 'main:register' %}"
-        warning.innerText = "그런 소모임은 아직 없습니다.\n소모임을 만들어보세요!"
+        warning.innerText = "해당하는 소모임이 아직 없습니다.\n소모임을 만들어보세요!"
         search_somdList_for_you.appendChild(warning);
 
         warningIcon = document.createElement("i");
@@ -394,5 +408,5 @@ function searchBtn_click(event){
 
 
 </script>
-<script src="{% static 'js/scroll_board.js' %}"></script>
+<!-- <script src="{% static 'js/scroll_board.js' %}"></script> -->
 {% endblock %}

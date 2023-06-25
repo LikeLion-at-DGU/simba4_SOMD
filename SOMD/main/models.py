@@ -39,6 +39,7 @@ class SOMD(models.Model):
 
     #솜디 정회원
     join_members = models.ManyToManyField(User, related_name="join_members", blank=True)
+    
     bookmark = models.ManyToManyField(User, related_name='bookmark', blank=True)
 
     #솜디 가입 대기회원
@@ -60,7 +61,7 @@ class Member(models.Model):
 
 
 class Post(models.Model):
-    somd = models.ForeignKey(SOMD, null=False, blank=False, on_delete=models.CASCADE,related_name='somds')
+    somd = models.ForeignKey(SOMD, null=False, blank=False, on_delete=models.CASCADE,related_name='posts')
 
     title = models.CharField(max_length=200)
     writer = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
@@ -68,11 +69,13 @@ class Post(models.Model):
     content = models.TextField()
 
     like = models.ManyToManyField(User, related_name='like', blank=True)
-    # num_comments = models.IntegerField(default=0) #댓글 개수
 
     scrap = models.ManyToManyField(User, related_name='scrap', blank=True)
     
-    is_fix = models.BooleanField(default=False)
+    is_fixed = models.BooleanField(default=False)
+
+
+    
 
     def __str__(self):
         return self.title
@@ -83,11 +86,9 @@ class Post(models.Model):
         else:
             return self.content
         
-    # def update_num_comments(self): #댓글 개수 카운트
-    #     self.num_comments = self.comment.count()  
-    #     self.save()
     class Meta:
         ordering = ['-pub_date']
+
 
 class Comment(models.Model):
     content = models.TextField()
@@ -98,10 +99,24 @@ class Comment(models.Model):
     def __str__(self):
         return self.post.title+" : "+self.content[:20]
     
-    def save(self, *args, **kwargs):   #여기서 def를 만들지말고
+    def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         # self.post.update_num_comments()
 
 class Images(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to="post/", blank=True, null=True)    
+
+
+class Alram(models.Model):
+    somd = models.ForeignKey(SOMD, null=True, blank=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, null=True, blank=True, on_delete=models.CASCADE)
+    sendUser = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    
+    date = models.DateTimeField(null=True, blank=True)
+
+    type = models.TextField(blank=False)
+
+class UserAlram(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    alrams = models.ManyToManyField(Alram, related_name="alram", blank=True)

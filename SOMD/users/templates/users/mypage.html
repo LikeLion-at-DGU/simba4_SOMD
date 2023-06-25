@@ -6,7 +6,7 @@
 
 <section class="header">
     <section class="mainTitle">
-        <div class="historyBack"><i class="fa-solid fa-chevron-left"></i></div>
+        <a href="{% url 'main:mainpage' %}"><i class="fa-solid fa-chevron-left"></i></a>
         <!-- <i class="fa-solid fa-house"></i> -->
         <div>{{ somd.name }}</div>
          <a href="{% url 'users:mypage_edit' %}" class="button"><span><i class="fa-solid fa-pen"></i> 수정</span></a>
@@ -18,10 +18,8 @@
 <section class="somdPage">
     <section class="mypage">
         <section class="top">
-            <!-- <div class="label">프로필 사진</div> -->
-            <div class="image" style="background-image:url({{user.profile.profile_pic.url}});"></div>
+            <div class="profile-pic-preview profile image" style="background-image:url({{user.profile.profile_pic.url}});"></div>
         </section>
-
         <section class="middle">
             <div class="fixinfo">{{ user.profile.email }}</div>
             <div class="fixinfo">{{ user.profile.birth }} / {{ user.profile.gender }}</div>

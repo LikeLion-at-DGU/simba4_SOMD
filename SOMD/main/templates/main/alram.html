@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="header">
+    <section class="mainTitle">
+        <a href="{% url 'main:mysomd' %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <div>솜디 로그</div>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>{{ somd.name }}</div>
+        <!-- <a href="" class="button"><span><i class="fa-solid fa-pen"></i> 글수정</span></a> -->
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage">
+<section class="alrampage">
+    {% if alrams %}
+    {%for alram in alrams.alrams.all %}
+        {% if alram.type == "somdReject" %}
+            <div class="somdReject">{{alram.somd.name}}의 가입이 거절되었습니다. {{alram.date}}</div>
+        {% elif alram.type == "somdAccept" %}    
+            <div class="somdAccept" onclick ="location.href = '{% url 'main:mainfeed' alram.somd.id %}'">{{alram.somd.name}}에 가입되셨습니다!{{alram.date}}</div>
+        {%endif%}
+    {%endfor%}
+    {%endif%}
+</section>
+</section>
+    
+{% endblock %}

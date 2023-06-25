@@ -258,3 +258,13 @@ font-size: 7px;
     cursor: pointer;
     margin-top: 10px;
 }
+
+textarea{
+    /* background-color: rgb(250, 250, 250); */
+    border-radius: 5px;
+    border: solid 1px lightgrey;
+}
+
+textarea:focus{
+    outline: 0;
+}

@@ -7,7 +7,7 @@
 
 <section class="header">
     <section class="mainTitle">
-        <div class="historyBack"><i class="fa-solid fa-chevron-left"></i></div>
+        <a href="{% url 'main:mainfeed' post.somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
         <!-- <i class="fa-solid fa-house"></i> -->
         <div>{{ somd.name }}</div>
         <a href="" class="button"><span><i class="fa-solid fa-pen"></i> 글수정</span></a>
@@ -45,61 +45,34 @@
         <section class="viewpost_footer">
             <div class="icon">
                 <div class="like">
-                    {% if user.is_authenticated %}
-                        {% if user in post.like.all %}
-                            <a href="{% url 'main:like_post' post_id=post.id %}">
-                                <i class="fa-solid fa-heart"></i>
-                            </a>
-                        {% else %}
-                            <a href="{% url 'main:like_post' post_id=post.id %}">
-                                <i class="fa-regular fa-heart"></i>
-                            </a>
-                        {% endif %}
-                    {% else %}
-                        <i class="fa-regular fa-heart"></i>
-                    {% endif %}
-                    <div>{{ post.like_count }}</div>
+                    <i class="fa-solid fa-heart"></i>
+                    <div>10</div>
                 </div>
                 <div class="comment">
                     <i class="fa-regular fa-message"></i>
                     <div>10</div>
                 </div>
             </div>
-            
-            
+
+            <div class="scrap">
+                <i class="fa-regular fa-bookmark" onClick="location.href='{% url 'main:scrap' post.id %}'"></i>
+            </div>
 
         </section>
-       
+    
         <section class="viewpost_commentConatiner">
 
             <form class="comment_form" method="POST" action="{% url 'main:viewpost' post.id %}">
                 {% csrf_token %}
-                <input class="text" type="text" name="comment" required>
+                <textarea class="text" type="text" name="comment" required></textarea>
                 <button class="submit" type="submit" name="submit">
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
             </form>
 
-            <div class="title">댓글 <i class="fa-solid fa-angle-right"></i> </div>
-            {{ num_comments }} 개
-            <div class="comment_list">
-                {% for comment in comments %}
-                <div class="comment">
-                    <div class="profile">
-                        <div class="image" style="background-image:url({{ comment.writer.profile.profile_pic.url }});"></div>
-                        <div class="name">{{ comment.writer }}</div>
-                    </div>
-                    <div class="comment_body">
-                        {{ comment.content }}
-                    </div>
-                    <div class="comment_footer">
-                        {{ comment.pub_date }}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+            <div class="title">댓글 {{ num_comments }} 개<i class="fa-solid fa-angle-right"></i> </div>
             
-            <!-- 20230624 22:20 댓글 클릭시 정보 팝업 띄우기 작업중 -->
+            <!-- 20230624 22:20 댓글 클릭시 정보 팝업 띄우기 작업중 > 작업완료 -->
             <div class="comment_list">
                 {% for comment in comments %}
                 <div class="comment">

@@ -11,21 +11,19 @@
 
 <section class="header">
     <section class="mainTitle">
-        <i class="fa-solid fa-house"></i>
+        
         <div>
-            메인페이지
+            스크랩한 게시물
         </div>
-        <!-- <i class="fa-solid fa-bell" onclick="location.href = {% url 'main:alram' %}"></i> -->
     </section>
 </section>
 <section class="EmptyForHeader"></section>
 
 <section class="somdPage">
-    <section class="subTitle">New Post</section>
+    <section class="subTitle">Scrap Post</section>
     {% if user.id == 13 %}
         <div class="NEED_TO_LOGIN"><a class="logout" href="{% url 'accounts:logout' %}">로그인하세요</div>
     {% else %}
-        {% if somds %}
         <section class="postContainer linebyline_post">
             <div class="list">
                 {% if posts %}
@@ -81,25 +79,14 @@
                     </div>
                     {% endfor %}
                     {% else %}
-                    <section class="warning">아직 포스트가 없습니다!</section>
+                    <section class="warning">아직 스크랩한 포스트가 없습니다!</section>
                     {% endif %}
             </section>
             {% endif %}
             </div>
             </section>
-        {% endif %}
 </section> 
 
-{% else %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/start.css' %}">
-    <section class="somdStart">
-        <div class="SomDLogo image"></div>
-        <div class="title">SOM D</div>
-        <div class="sub title">동국대 소모임 네트워킹 서비스</div>
-        <a class="start button" href="{% url 'main:mainpage' %}">시작하기</a>
-        <a class="button" href="{% url 'accounts:login' %}">로그인</a>
-        <a class="button" href="{% url 'accounts:signup' %}">회원가입</a>
-    </section>
 {% endif %}
 
 

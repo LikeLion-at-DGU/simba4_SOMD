@@ -1,6 +1,9 @@
 let page = document.querySelector(".somdPage");
 let container = document.querySelector(".SDcontainer");
 
+
+if(document.querySelector(".sidebar_container")){
+
 // ----사이드바 기본 설정 안 보임/
 let sidebar = document.querySelector(".sidebar_container");
 sidebar.style.display = "none";
@@ -108,7 +111,9 @@ var historyBack = document.querySelector(".historyBack");
 if(historyBack != null){
   historyBack.addEventListener('click',function(event){
     if(event.target == historyBack || event.target.parentNode == historyBack){
-      window.history.back();
+      window.history.go(-1);
     }
   });
+}
+
 }

@@ -17,7 +17,7 @@
   align-items: center;
   justify-content: end;
 
-  padding: 0px 20px;
+  padding: 0px 3px;
 }
 
 
@@ -200,7 +200,7 @@ font-size: 20px;
   
 }
 
-.boardIcon{
+/* .boardIcon{
   display: flex;
   justify-content: space-between;
   align-content: space-between ;
@@ -217,7 +217,7 @@ font-size: 20px;
   width: 50%;
   height: 50%;
   flex-shrink: 0;
-}
+} */
 
 .navbar .sidebar_button>i{
   font-size: 25px;
@@ -285,3 +285,25 @@ font-size: 20px;
 
 /* <section class="header"></section>
     <section class="EmptyForHeader"></section> */
+
+
+
+.header_button{
+  font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  border: #0ECC87 2px solid;
+  background-color: #0ECC87;
+  color: white;
+}
+
+.header_button>i{
+  padding-right: 5px;
+}
+
+.header_button:hover{
+  color: white;
+}
