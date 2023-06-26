@@ -26,7 +26,10 @@
             {% else %}
             <div class="background image">
             {% endif %}
-                <a class="bookmark"><i class="fa-regular fa-star"></i></a>
+            <a class="bookmark" onclick="toggleBookmark('{{ somd_id }}')">
+                <i class="fa-regular fa-star"></i>
+            </a>
+                
                 <div class="info">
                     <div>{{somd.college}}</div>
                     <div>

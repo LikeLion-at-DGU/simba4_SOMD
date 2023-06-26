@@ -310,7 +310,7 @@ def viewpost(request, post_id):
 def bookmark(request, somd_id):
     somd = SOMD.objects.get(id=somd_id)
     user = request.user
-    is_user_bookmarked = user.bookmark.filter(id=somd.id).exists()
+    is_user_bookmarked = user.somd.bookmark.filter(id=somd.id).exists()
 
     if is_user_bookmarked:
         user.bookmark.remove(somd)

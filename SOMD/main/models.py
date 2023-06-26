@@ -40,7 +40,7 @@ class SOMD(models.Model):
     #솜디 정회원
     join_members = models.ManyToManyField(User, related_name="join_members", blank=True)
     bookmark = models.ManyToManyField(User, related_name='bookmark', blank=True)
-
+#
     #솜디 가입 대기회원
     waitTojoin_members = models.ManyToManyField(User, related_name="waitTojoin_members", blank=True)
     join_requests = models.ManyToManyField(JoinRequest, related_name="join_requests", blank=True)
