@@ -75,6 +75,11 @@
 
 .mypage .long.text {
   height: 70px;
+  white-space: pre-wrap;
+  /* 3줄부터는 생략시키기 */
+  height: 3em;
+  overflow:scroll;
+  text-overflow: ellipsis;
 }
 
 .mypage .somd_list {
@@ -252,12 +257,9 @@ textarea:focus {
 }
 
 
-
 .secession{
     position: fixed;
     bottom:60px;
     right:10px;
-
-
     color:lightgrey;
 }
