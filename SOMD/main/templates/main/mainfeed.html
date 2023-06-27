@@ -237,33 +237,20 @@
             </div>
             {% endif %}
         </section>
-
-        <div class="pagination">
-            <!-- 현재 page_obj가 이전 페이지가 있다면, 1 페이지로 가는 << a태그 생성 -->
-            {% if page_obj.has_previous %}
-                <a href="?page=1">&laquo;&nbsp;</a>
-            {% endif %}
-
-            <!-- custom_range 범위만큼 순회 -->
-            {% for num in custom_range %}
-                <!-- 현재 페이지면 클릭 못하도록 막음 -->
-                {% if num == page_obj.number %}
-                    <span class="current-page"> &nbsp;{{ num }}&nbsp; </span>
-                {% else %}
-                <!-- 그 외의 경우 a태그로 생성 -->
-                    <a href="?page={{ num }}" onclixk> &nbsp;{{ num }}&nbsp; </a>
-                {% endif %}
-            {% endfor %}
-            
-            <!-- 현재 page_obj의 다음 페이지가 있다면, 끝 페이지로 이동하는 >> a 태그 생성 -->
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.paginator.num_pages }}">&nbsp;&raquo;</a>
-            {% endif %}
+        {% if option_state == "리스트" %}
+        <div class="pagenation_box">
+            <div class="pagenation">
+                <span><i class="fa-solid fa-angle-left"></i></span>
+                <span class="current-page">3</span>
+                <span><i class="fa-solid fa-angle-right"></i></span>
+            </div>
         </div>
-    
+        {% endif %}
+
     </section> 
 
 </section>
+
 
 <!-- <script src="{% static 'js/postContainer.js' %}"></script> -->
 

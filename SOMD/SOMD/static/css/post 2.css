@@ -1,4 +1,3 @@
-
 .about_post>.text>.title{
     display: block;
     overflow: hidden;
@@ -13,12 +12,8 @@
 
     color:#282828
 }
-.somdPage{
-    height: 100%;
-}
-.mainfeed{
-    flex-grow: 1;
-}
+
+
 
 .about_post:hover{
     color: #282828;
@@ -27,27 +22,17 @@
 .about_post:focus{
     color: #282828;
 }
-
-.postContainer{
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
 .postContainer .postContainer_title{
     color: grey;
     font-size: 25px;
     /* margin-top: 20px; */
     margin-bottom: 20px;
     padding: 0px 10px 10px 10px;
-    border-bottom: 2px solid lightgrey;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    border-bottom: solid lightgrey 1px;
 }
 
 .postContainer .list{
-    padding-bottom: 5px;
-    flex-grow: 1;
+    padding-bottom: 25px;
 }
 
 .name>.somdname{
@@ -58,6 +43,8 @@
 /* ----리스트형---- */
 
 .linebyline_post .post_box{
+    /* height: 80px; */
+    position: relative;
     /* width:180%; */
     color: #282828;
 }
@@ -79,11 +66,15 @@
 
 /* ----리스트형 헤더---- */
 .linebyline_post .post_header{
+    position: absolute;
+    bottom: 0px;
+    /* position: absolute;
+    bottom: 0px; */
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    margin: 5px 5px;
+    
+    margin:0px 5px;
     
 }
 .linebyline_post .post_header>.profile{
@@ -92,8 +83,8 @@
     display: flex;
 }
 .linebyline_post .post_header>.profile>.image{
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
     /* background-color: #0ECC87; */
     border-radius: 50%;
 }
@@ -125,22 +116,24 @@
 }
 /* ----리스터형 내용---- */
 .linebyline_post .about_post{    
+    /* position: absolute;
+    top: 0px; */
     display: flex;
     justify-content: center;
     align-items: center;
     /* width: 100%; */
-    border: 1px solid lightgrey;
-    padding: 5px;
+    /* border: 1px solid lightgrey; */
+    /* padding: 5px; */
     border-radius: 5px;
-    margin: 0px 0px 5px 0;
+    /* margin: 10px 0px 5px 0; */
 }
 
 .linebyline_post .about_post>.image{
     background-size: contain;
     background-repeat: no-repeat;
     box-shadow: 0 0px 2px 1px rgba(77, 77, 77, 0.3);
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     margin: 5px;
     flex-shrink: 0;
 
@@ -166,12 +159,12 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: 60px;
+    /* height: 30px; */
     padding: 0px 5px;
     /* padding-bottom: 0px; */
     /* border: 2px solid gray; */
     border-radius: 5px;
-    margin: 5px 0px;
+    /* margin: 5px 0px; */
 
     font-size: 15px;
 }
@@ -191,10 +184,13 @@
 
 
 .linebyline_post .post_footer{
+    border-bottom: lightgray solid 1px;
     margin:  0px 5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
+    font-size: 10px;
+    height: 25px;
 }
 
 .linebyline_post .post_footer>.icon{
@@ -209,8 +205,8 @@
 }
 
 .linebyline_post .post_footer i{
-    margin: 3px;
-    font-size: 15px;
+    margin-right: 3px;
+    font-size: 10px;
     color:grey;
 }
 

@@ -1,3 +1,30 @@
+.pagenation_box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.pagenation{
+    bottom:20px;
+    /* background-color: lightgrey; */
+    /* border-radius: 10px; */
+    width: 120px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+.pagenation span{
+    width: calc(100%/3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:  grey;
+    height: 50px;
+}
+
 .needTojoin{
     /* background-color: lightgrey; */
     border: solid 1px lightgrey;
@@ -91,7 +118,7 @@
     
     justify-content: end;
     align-items: center;
-    margin:15px 0px 15px 0px;
+    /* margin:10px 0px 10px 0px; */
     font-size: 20px;
     display: flex;
 
