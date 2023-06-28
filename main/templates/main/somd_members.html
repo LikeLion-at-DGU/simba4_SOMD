@@ -45,7 +45,7 @@
       <div class="section_title">소모임 회원</div>  
 
 
-        {% for join_user in somd.join_members.all %}
+        {% for join_user in somd.join_members.all reversed %}
         <div class="manageMemberForm">
           <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
           <div class="information">
