@@ -43,7 +43,6 @@ form{
 .input_text, select{
     flex-grow: 1;
     height: 38.5px;
-    flex-grow: 1;
     padding: 5px;
     border-radius: 5px;
     border:#0ECC87 solid 3px;
