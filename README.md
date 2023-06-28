@@ -111,8 +111,12 @@
  4️⃣ 사용자 권한(관리자, 가입 멤버, 미가입 멤버)에 따른 기능을 제한합니다.
 
 
+---
 
+### HOW TO RUN
+Link: http://somdsimbaton.pythonanywhere.com/
 
+- 위 링크로 접속하여 회원가입 후 활동해주시면 됩니다 ^^
 
 ---
 
