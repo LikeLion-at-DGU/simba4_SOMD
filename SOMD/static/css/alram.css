@@ -1,0 +1,65 @@
+.alramPage{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+}
+
+.alramPage .alram{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-bottom: lightgrey 1px solid;
+}
+
+.alramPage .alram_about{
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    width: 100%;
+    /* margin-bottom: 10px; */
+    min-height: 60px;
+    padding: 0px 5px;
+}
+
+.somdReject{
+    background-color: rgb(250, 250, 250);
+}
+.alram_about>i{
+    flex-shrink: 0;
+    font-size: 20px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: lightgrey;
+    margin-right: 10px;
+}
+.alram_about>.image{
+    flex-shrink: 0;
+    margin:5px 10px 5px 0px;
+    width: 50px;
+    height: 50px;
+}
+
+.alram_about>.image.profile{
+    border-radius: 50%;
+}
+
+.alram_about>.text{
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    margin:5px;
+    font-size: 12px;
+}
+
+.alram>.date{
+    padding-left: 5px;
+    
+    padding-top: 5px;
+    color: grey;
+    font-size: 5px;
+}

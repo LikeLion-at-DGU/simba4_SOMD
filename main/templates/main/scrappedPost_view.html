@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+{% if user.is_authenticated %}
+    <!-- <h1>솜디 게시판</h1> -->
+    <!-- <a href="{% url 'main:somd_new' %}">솜디 등록</a> -->
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/mainPage.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/post.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <a href="{% url 'main:mainPage' %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>스크랩한 게시물</div>
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="subTitle"><i class="fa-solid fa-bookmark"></i>Scrap Post</section>
+<section class="somdPage">
+
+    {% if user.id == 13 %}
+        <div class="NEED_TO_LOGIN"><a class="logout" href="{% url 'accounts:logout' %}">로그인하세요</div>
+    {% else %}
+        <section class="postContainer linebyline_post">
+            <div class="list">
+                {% if posts %}
+                <section class="Post">
+                    {% for post in posts %}
+                    <div class="post_box">
+                        <section class="post_header">
+                            <div class="profile">
+                                <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
+                                <div class="name">
+                                    <div class="username">{{ post.writer.profile.nickname }}</div>
+                                    <div class="somdname">{{post.somd.name}}</div>
+                                </div>
+                            </div>
+                        </section>
+                        <a class="about_post" href="{% url 'main:somd_post_view' post.id %}">
+
+                            {% if post.images.all %}
+                                
+                                <div class="image" style="background-image:url( {{ post.images.first.image.url }} );">
+                                {% if post.images.all|length > 1 %}
+                                    <div class="image_more">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                            {% endif %}
+                        </div>
+                            {% else %}
+                                <div class="nonimage"></div>
+                            {% endif %}
+                            <div class="text">
+                                <div class="title">{{ post.title }}</div>
+                                <div class="body">{{ post.summary }}</div>
+                                <!-- <div class="date">{{post.pub_date}}</div> -->
+                            </div>
+                        </a>
+                        <section class="post_footer">
+                            <div class="icon">
+                                <div class="like">
+                                    <i class="fa-solid fa-heart"></i>
+                                    <div>{{ post.like_count }}</div>
+                                </div>
+                                <div class="comment">
+                                    <i class="fa-regular fa-message"></i>
+                                    <div>{{ post.comment_count }}</div>
+                                </div>
+                            </div>
+
+                        </section>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <section class="warning">아직 스크랩한 포스트가 없습니다!</section>
+                    {% endif %}
+            </section>
+            {% endif %}
+            </div>
+            </section>
+</section> 
+
+{% endif %}
+
+
+<script src="{% static 'js/postContainer.js' %}"></script>
+
+{% endblock %}

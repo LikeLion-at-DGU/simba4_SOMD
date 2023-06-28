@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/post.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/somdFeed.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/_button.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+
+    
+        <i class="fa-solid fa-user-group"></i>
+ 
+        <div>{{ somd.name }}</div>
+    </section>
+</section>
+
+<section class="EmptyForHeader"></section>
+
+
+
+<section class="somdPage">
+            {% if user in somd.join_members.all %}
+            <div class="writeButton" onclick=location.href="{% url 'main:somd_post_new' somd.id%}"><i class="fa-solid fa-pen"></i></div>
+            {%endif%}
+
+
+    <section class="somdFeed">
+        <section class="feed_header">
+            {% if somd.backgroundimage %}
+            <div class="background image" 
+                style="background-image:url({{somd.backgroundimage.url}});">
+            {% else %}
+            <div class="background image">
+            {% endif %}
+    
+    <div class="info">
+        <div>
+            {% if somd.department != "-" %} 
+                {{ somd.department}}
+            {% endif %} 
+        </div>
+        <div>{{somd.college}}</div>
+    </div>
+            </div>
+
+            <div class="profile">
+    {% if somd.profileimage %}
+    <div class="image" 
+        style="background-image:url({{somd.profileimage.url}});"></div>
+    {% else %}
+    <div class="basic somd image">somd</div>
+    {% endif %}
+    </div>
+
+    {% if user in somd.bookmark.all %}
+    <!-- <i class="fa-solid fa-star"></i> -->
+    <a class="bookmark" href="{% url 'main:bookmark' somd.id %}"><i class="fa-solid fa-star"></i></a>
+    {%else%} 
+    <a class="bookmark" href="{% url 'main:bookmark' somd.id %}"><i class="fa-regular fa-star"></i></a>
+    {%endif%}
+
+    <div class="info">
+        <div class="name">{{ somd.name }}</div>
+        <div class="intro">{{ somd.intro }}</div>
+        <!-- <div>{{ somd.admin.username }}</div> -->
+    </div>
+    
+    {% if somd.tags.all|length != 0 %}
+    <div class="row_tag_box">
+        <div class="row_tag_box_for_scroll">
+                {%for tag in somd.tags.all%}
+                    <div class="tag_label">{{ tag.name }}</div>
+                {%endfor%}
+        </div>
+    </div>
+    {%endif%}
+
+            <div class="button_case">
+                {% if somd.admin.id == user.id %}
+                    <a class="body_button green_button body_button2" href="{% url 'main:somd_members' somd.id %}">멤버관리</a>
+                    <a class="body_button green_button body_button2" href="{% url 'main:somd_edit' somd.id %}">솜디수정</a>
+                {% endif %}
+
+                {% if user in somd.waitTojoin_members.all %}
+                <div class="body_button  green_button body_button1 white_button">가입대기중</div>
+                {% elif not user in somd.join_members.all %}
+                    <a class="body_button green_button body_button1" href="{% url 'main:join' somd.id %}">가입하기</a>
+                {% endif %}
+            </div>
+        </section>
+
+        <form id="option_state_form" style="display: none;" method="POST" action="{% url 'main:somdFeed' somd.id %}">
+            {% csrf_token %}
+            <input type="text" name="option_state" id="option_state" value="{{option_state}}" tyle="display: none;">
+        </form>
+
+        <section class="option">
+            <!-- <form class="search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text">
+            </form> -->
+            <div id="container_notice" style="color: grey; font-size: 13px;">
+
+            </div>
+            <div class="view postContainer_control">
+                <i class="fa-solid fa-image"></i>
+                <i class="fa-solid fa-list"></i>
+            </div>
+        </section>
+        
+        <section class="postContainer linebyline_post">
+            {% if fixed_posts %} <!--고정한 포스트가 있을 경우-->
+                <div class="postContainer_title">notice</div>
+                <div class="list">
+                    {% for post in fixed_posts %}
+                
+                    <div class="post_box">
+                        <section class="post_header">
+                            <div class="profile">
+                                <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
+                                <div class="name">{{ post.writer.profile.nickname }}</div>
+                            </div>
+                            <div class="icon">
+                                {% if somd.admin.id == user.id %}
+                                <i class="admin_album fa-solid fa-thumbtack" style="display:none; color: #0ECC87;"></i>
+                                <i class="admin_linebyline fa-solid fa-thumbtack" style="display:block; color: #0ECC87;" onClick="location.href='{% url 'main:fix' post.id somd.id %}'"></i>
+                                {% else %}
+                                <i class="fa-solid fa-thumbtack" style="color: #0ECC87;"></i>
+                                {% endif %}
+                                <!-- <i class="fa-solid fa-ellipsis-vertical"></i> -->
+                            </div>
+                        </section>
+
+                        <a class="about_post"  href="{% url 'main:somd_post_view' post.id %}">
+                            {% if post.images.all %}
+                                <div class="image" style="background-image:url( {{ post.images.first.image.url }} );">
+                                {% if post.images.all|length > 1 %}
+                                    <div class="image_more">
+                                        <i class="fa-solid fa-plus"></i>
+                                    </div>
+                                {% endif %}
+                                </div>
+                            {% else %}
+                                <div class="nonimage" style="display: none;"></div>
+                            {% endif %}
+                            <div class="text">
+                                <div class="title">{{ post.title }}</div>
+                                <div class="body">{{ post.summary }}</div>
+                            </div>
+                        </a>
+                        <section class="post_footer">
+                            <div class="icon">
+                                <div class="like">
+                                    <i class="fa-solid fa-heart"></i>
+                                    <div>{{post.like_count}}</div>
+                                </div>
+                                <div class="comment">
+                                    <i class="fa-regular fa-message"></i>
+                                    <div>{{ post.comment_count }}</div>
+                                </div>
+                            </div>
+                            
+
+                        </section>
+                    </div>
+                    {%endfor%}
+                    
+                </div>
+            {% endif %}  <!--고정한 포스트가 있을 경우-->
+            
+            
+            <div class="postContainer_title">post</div>
+            {%if somd.posts %}
+            {%if not user in somd.join_members.all %}
+                <section class="needTojoin">소모임에 가입하시면 더 많은 게시글을 볼 수 있습니다.</section>
+            {%endif%}
+            {%endif%}
+
+            {% if posts %} <!--고정 안한 포스트가 없을 경우-->
+            <div class="list">
+                {% for post in posts %}
+                    
+                    <div class="post_box">
+                        <section class="post_header">
+                            <div class="profile">
+                                <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
+                                <div class="name">{{ post.writer.profile.nickname }}</div>
+                            </div>
+                            <div class="icon">
+                                {% if somd.admin.id == user.id %}
+                                <i class="admin_linebyline fa-solid fa-thumbtack" style="display:block; color: lightgrey;" onClick="location.href='{% url 'main:fix' post.id somd.id %}'"></i>
+                                {% endif %}
+                                <!-- <i class="fa-solid fa-ellipsis-vertical"></i> -->
+                            </div>
+                        </section>
+
+                        <a class="about_post"  href="{% url 'main:somd_post_view' post.id %}">
+
+                        {% if post.images.all %}
+                            <div class="image" style="background-image:url( {{ post.images.first.image.url }} );">
+                            {% if post.images.all|length > 1 %}
+                                <div class="image_more">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                            {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="nonimage" style="display: none;"></div>
+                        {% endif %}
+                            <div class="text">
+                                <div class="title">{{ post.title }}</div>
+                                <div class="body">{{ post.summary }}</div>
+                            </div>
+                        </a>
+                        <section class="post_footer">
+                            <div class="icon">
+                                <div class="like">
+                                    <i class="fa-solid fa-heart"></i>
+                                    <div>{{post.like_count}}</div>
+                                </div>
+                                <div class="comment">
+                                    <i class="fa-regular fa-message"></i>
+                                    <div>{{ post.comment_count }}</div>
+                                </div>
+                            </div>
+
+
+                        </section>
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                <section class="warning">아직 포스트가 없습니다!</section>
+            </div>
+            {% endif %}
+        </section>
+        {% if option_state == "리스트" %}
+        <div class="pagenation_box">
+            <div class="pagenation">
+                {% if page_obj.has_previous %}
+                <span><i class="fa-solid fa-angle-left" onClick="location.href='?page={{ page_obj.previous_page_number }}'"></i></span>
+                {%else%}
+                <span></span>
+                {% endif %}
+                
+                <span > &nbsp;{{ page_obj.number }}&nbsp; </span> 
+                
+                {% if page_obj.has_next %}
+                <span><i class="fa-solid fa-angle-right" onClick="location.href='?page={{ page_obj.next_page_number }}'"></i></span>
+                {%else%}
+                <span></span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+    </section> 
+
+</section>
+
+
+<!-- <script src="{% static 'js/postContainer.js' %}"></script> -->
+
+
+<script>
+var option_state = '{{option_state}}' ;
+// console.log(option_state);
+
+if(document.querySelector('.postContainer_control')){
+
+    const postContainer_control = document.querySelector('.postContainer_control');
+    postContainer_control.addEventListener('click', function(event){
+        if(option_state== "리스트"){
+            document.getElementById("option_state").value = "피드";
+        }
+        else if(option_state == "피드"){
+            document.getElementById("option_state").value = "리스트";
+        }
+        console.log(option_state);
+        console.log(document.getElementById("option_state").value );
+        document.getElementById("option_state_form").submit();
+    });
+
+}
+
+
+const postContainer_control = document.querySelector('.postContainer_control');
+const postContainer_control_list = postContainer_control.querySelector('.fa-list');
+const postContainer_control_feed = postContainer_control.querySelector('.fa-image');
+
+
+var notice_container = `
+    <i class="fa-solid fa-circle-exclamation"></i> 
+    피드형에서는 사진이 첨부된 게시글만 볼 수 있어요
+`
+postContainer_control_feed.style.color = "lightgrey";
+// console.log("dd" + postContainer_control);
+
+let admin_linebyline = document.getElementsByClassName("admin_linebyline")
+let admin_album = document.getElementsByClassName("admin_album")
+let Post_image;
+let fixedPost_image;
+let notice = document.getElementById("container_notice")
+// console.log(Post_image)
+// console.log(fixedPost_image)
+
+
+
+function loadPage(){
+    let postContainer_control_state = "{{option_state}}";
+    // if(event.target == postContainer_control ||event.target  == postContainer_control_list || event.target == postContainer_control_feed){
+        // console.log(event.target);
+        let postContainer = document.querySelector(".postContainer");
+        let nonImages = postContainer.getElementsByClassName("nonimage");
+        // console.log(nonImages)
+
+        //피드
+        if(postContainer_control_state == "피드"){
+            postContainer_control_state = "피드";
+            postContainer_control_feed.style.color = "grey";
+            postContainer_control_list.style.color = "lightgrey";
+            postContainer.className = "postContainer album_post"
+
+
+            if(document.querySelector("#Post_image") !=null){
+                Post_image = document.querySelector("#Post_image");
+                Post_image.className ="album_post warning"
+                Post_image.style.display = "flex";
+            }
+            
+            if(document.querySelector("#fixedPost_image")!=null ){
+                fixedPost_image = document.querySelector("#fixedPost_image");
+                fixedPost_image.className ="album_post warning"
+                fixedPost_image.style.display= "flex";
+            }
+
+            // postContainer_control_icon.className = "fa-solid fa-list";
+
+            for(image of nonImages){
+                image.parentNode.parentNode.style.display = "none";
+            }
+
+            for(admin of admin_album){
+                admin.style.display = "block";
+            }
+            for(admin of admin_linebyline){
+                admin.style.display = "none";
+            }
+            notice.innerHTML = notice_container;
+        }
+
+        // 리스트
+        else if (postContainer_control_state == "리스트"){
+            postContainer_control_state = "피드"
+            postContainer_control_list.style.color = "grey";
+            postContainer_control_feed.style.color = "lightgrey";
+            postContainer.className = "postContainer linebyline_post";
+            
+            // postContainer_control_icon.className = "fa-solid fa-image";
+
+
+            if(document.querySelector("#Post_image") !=null){
+                Post_image = document.querySelector("#Post_image");
+                Post_image.className ="linebyline_post warning"
+                Post_image.style.display ="none";
+            }
+            
+            if(document.querySelector("#fixedPost_image")!=null ){
+                fixedPost_image = document.querySelector("#fixedPost_image");
+                fixedPost_image.className ="linebyline_post warning"
+                fixedPost_image.style.display="none";
+            }
+
+
+            for(image of nonImages){
+                image.parentNode.parentNode.style.display = "block";
+            }
+            for(admin of admin_album){
+                admin.style.display = "none";
+            }
+
+            for(admin of admin_linebyline){
+                admin.style.display = "block";
+            }
+            notice.innerHTML = ""
+        }
+        // console.log(postContainer_control_state);
+    };
+
+
+
+
+
+loadPage();
+
+</script>
+
+
+<script>
+    let beforeLink = document.referrer
+    function gotoBack(){
+        // console.log(beforeLink);
+        if(beforeLink.includes("somd_post_view") ||beforeLink.includes("join")||beforeLink.includes("members") || beforeLink.includes("somdFeed")|| beforeLink.includes("needTologin") ||beforeLink.includes("new") ||beforeLink.includes("somd_edit") ){
+            '{% if user.is_authenticated%}'
+            location.href = '{% url 'main:mySomd' %}';
+            '{%else%}'
+            location.href = '{% url 'main:somdList' %}';
+            '{%endif%}'
+        }
+        else{
+            location.href = beforeLink;
+        }
+    }
+    </script>
+
+{% endblock %}
+
+ 

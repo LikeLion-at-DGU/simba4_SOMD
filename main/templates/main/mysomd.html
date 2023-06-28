@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/mySomd.css' %}">
+<section class="header">
+    <section class="mainTitle">
+        <i class="fa-solid fa-user"></i>
+        <div>
+            나의솜디
+        </div>
+        {% if alrams.new %}
+        <i class="fa-solid fa-bell" onclick="location.href = {% url 'main:alram' %}"></i>
+        {% else %} 
+        <i class="fa-solid fa-bell" style="color:lightgrey" onclick="location.href = {% url 'main:alram' %}"></i>
+        {% endif %}
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage">
+    {% if user.is_authenticated %} <!-- 로그인 했음 -->
+        <section class="somdList">
+            <div class="section_title">즐겨찾는 솜디</div>
+            {% if user.bookmark.all %}
+                <!-- 소모임이 있을 경우 -->
+                {% for somd in user.bookmark.all %}
+                    {% if user in somd.join_members.all %}
+                        <a class="somd join " href="{% url 'main:somdFeed' somd.id %}">
+                            <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
+                            <div class="information">
+                                <div class="name">{{ somd.name }}</div>
+                                <div class="intro">{{ somd.intro }}</div>
+                                <div class="college"> {{ somd.college }} 
+                                    {% if somd.department != "-" %} 
+                                        {{ somd.department}}
+                                    {% endif %} 
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% for somd in user.bookmark.all %}
+                    {% if not user in somd.join_members.all %}
+                        <a class="somd wait " href="{% url 'main:somdFeed' somd.id %}">
+                            <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
+                            <div class="information">
+                                <div class="name">{{ somd.name }}</div>
+                                <div class="intro">{{ somd.intro }}</div>
+                                <div class="college"> {{ somd.college }} 
+                                    {% if somd.department != "-" %} 
+                                        {{ somd.department}}
+                                    {% endif %} 
+                                </div>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <!-- 소모임이 없을 경우 -->
+                <a class="warning" href="{% url 'main:somdList' %}">
+                    즐겨찾는 솜디가 아직 없습니다!
+                    <br>
+                    소모임을 둘러보세요!
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            {% endif %}
+        </section>
+
+        <section class="somdList">
+            <div class="section_title">내가 속한 솜디</div>
+            {% if somds %}
+                <!-- 소모임이 있을 경우 -->
+                {% for somd in somds %}
+                    <a class="somd join " href="{% url 'main:somdFeed' somd.id %}">
+                        <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
+                        <div class="information">
+                            <div class="name">{{ somd.name }}</div>
+                            <div class="intro">{{ somd.intro }}</div>
+                            <div class="college"> {{ somd.college }} 
+                                {% if somd.department != "-" %} 
+                                    {{ somd.department}}
+                                {% endif %} 
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <!-- 소모임이 없을 경우 -->
+                <a class="warning" href="{% url 'main:somdList' %}">
+                    내가 속한 솜디가 아직 없습니다!
+                    <br>
+                    소모임에 가입해보세요!
+                    <i class="fa-solid fa-plus"></i>
+                </a>
+            {% endif %}
+        </section>
+
+        <section class="somdList">
+            {% if waiting_somds %}
+                <!-- 가입 대기 중인 소모임이 있을 경우 -->
+                <div class="section_title">가입 대기중인 솜디</div>
+                {% for somd in waiting_somds %}
+                    <a class="somd wait" href="{% url 'main:somdFeed' somd.id %}">
+                        <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
+                        <div class="information">
+                            <div class="name">{{ somd.name }}</div>
+                            <div class="intro">{{ somd.intro }}</div>
+                            <div class="college"> {{ somd.college }} 
+                                {% if somd.department != "-" %} 
+                                    {{ somd.department}}
+                                {% endif %} 
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            {% endif %}
+        </section>
+
+    {% else %}
+        <!-- 로그인 안함 -->
+        <div class="NEED_TO_LOGIN"><a class="logout" href="{% url 'accounts:logout' %}">로그인하세요</div>
+    {% endif %}
+</section>
+    
+{% endblock %}

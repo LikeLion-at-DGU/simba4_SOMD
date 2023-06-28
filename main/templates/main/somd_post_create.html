@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/post.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/somd_post_new.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <a href="{% url 'main:somdFeed' somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>글쓰기</div>
+    </section>
+</section>
+
+<section class="somdPage">
+    <section class="somdFeed">
+        
+
+        <!-- <div class="titlebtn">
+            <a class="button">글 쓰기</a>
+        </div> -->
+    
+        <form action = "{% url 'main:somd_post_create' somd.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mainForm">
+                <section class="joinForm">
+                    <input type="text" id="is_secret" name="is_secret" value="0" style="display: none;">
+                    <input type="text" name="title" class="titleForm" placeholder="TITLE" maxlength="24">
+                    <textarea type="text" name="content" class="textForm" placeholder="TEXT"></textarea>
+                    <section class="textFormInnerBtn">
+                        <button type="button" onclick="chooseImage()"><i class="far fa-image"></i></button><br>
+                        <i id ="id_secret" class="fas fa-unlock-alt" onclick="isitSecret(event)"></i>
+                    </section>
+                </section>
+            </div>
+
+            <div class="postPicturePreview image">
+                <label for="postPictureInput">
+                    <input type="file" accept="image/*" name="images" id="postPictureinput" multiple>
+                </label>
+            </div>
+
+            <!-- feed 사진 작업중 1 -->
+            <!-- <section class="feed_header">
+                <div class="back-pic-preview background image">
+                    <label for="back-pic-input">
+                        <input type="file" accept="image/*" name="back_pic" id="back-pic-input">
+                    </label>
+                </div>
+                
+                <div class="profile-pic-preview profile image">
+                    <i class="fa-regular fa-image"></i>
+                    <label for="profile-pic-input">
+                        <input type="file" accept="image/*" name="profile_pic" id="profile-pic-input">
+                    </label>
+                </div>
+            </section> -->
+
+            <!-- feed 사진 작업중 2 -->
+            <input type="file" id="image-input" name="images" style="display: none;" onchange="previewImage()" multiple>
+            <!-- <button onclick="chooseImage()"><i class="far fa-image"></i></button><br> -->
+            <img id="image-preview" src="" style="max-width: 300px; margin-top: 10px;">
+        
+
+
+            <div class="test">
+                <button type="submit" id="uploadBtn" class="button">업로드</button>
+            </div>
+        </form>
+        <!-- <form action = "{% url 'main:somd_post_create' somd.id %}" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <p>제목 : <input type="text" name="title"></p>
+
+                <p>사진 : <input type="file" accept = "image/*" name ="images" multiple></p>
+                <p>내용 : <textarea type="textarea" name="content" id="" cols="30" rows="10"></textarea></p>
+                
+                <button type="submit">제출</button>
+            </div>
+        </form> -->
+</section>
+
+<script>
+        // feed 사진 작업중 2
+    function chooseImage() {
+        var fileInput = document.querySelector('#image-input');
+        fileInput.click();
+    }
+
+    function previewImage() {
+        var preview = document.querySelector('#image-preview');
+        var file = document.querySelector('#image-input').files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function() {
+            preview.src = reader.result;
+        }
+
+        if (file) {
+            reader.readAsDataURL(file);
+        } else {
+            preview.src = "";
+        }
+    }
+
+    let id_secret = document.querySelector("#id_secret");
+    let is_secret =document.querySelector("#is_secret");
+
+    if(is_secret.value == "1"){
+        id_secret.className = "fas fa-solid fa-lock";
+    }
+    else{
+        id_secret.className = "fas fa-solid fa-unlock";
+    }
+    
+    // console.log(is_secret.value)
+    function isitSecret(event){
+        if(is_secret.value == "1"){
+            // console.log(is_secret.value)
+            // console.log("-")
+            id_secret.className = "fas fa-solid fa-unlock";
+            is_secret.value = "0"
+            // console.log(is_secret.value)
+        }
+        else{
+            // console.log(is_secret.value)
+            // console.log("-")
+            id_secret.className = "fas fa-solid fa-lock";
+            is_secret.value = "1";
+            // console.log(is_secret.value)
+        }
+        // console.log(is_secret.value)
+    }
+</script>
+
+
+{% endblock %}

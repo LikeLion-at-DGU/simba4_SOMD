@@ -1,0 +1,412 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/somdList.css' %}">
+<section class="header">
+    <section class="mainTitle">
+        <i class=" fa-solid fa-magnifying-glass"></i>
+
+        <div>솜디게시판</div>
+        <a class="header_button" href="{% url 'main:somd_new' %}">
+            <i class="fa-solid fa-plus"></i> SOM D 등록
+        </a>
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage_header"></section>
+
+<section class="somdPage">
+
+    <section class="somdList">
+        <div class="somdList_text"><span>SOMD </span>RANK</div>
+        <div class="list">
+            <div class="somd_list">
+
+                <div class="somd_list_for_scroll">
+                    {% for somd in rank_somds %}
+                    <a class="somd icon_box" href="{% url 'main:somdFeed' somd.id %}">
+                        <div class="image"
+                            style="background-image:url({{somd.profileimage.url}});"></div>
+                        <div class="name">{{somd.name}}</div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+    </section>
+
+    <section class="option">
+        <div class="row_tag_box">
+            <div class="row_tag_box_for_scroll">
+                <div class="notice">태그를 사용해 소모임을 찾아보세요!</div>
+            </div>
+        </div>
+        <button onclick="filterBtn_click(event)"><i class="fa-solid fa-filter"></i></button>
+    </section>
+
+    <section class="EmptyForTitle"> </section>
+    
+
+    <div class="tag_popup" style="display: none;">
+        <div class="tag_popup_header">
+            <div class="title"><i class="fa-solid fa-filter"></i>소모임 필터</div>
+            <button class="closeBtn" onclick="filterBtn_close(event)"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <section class="tag_popup_for_scroll">
+            
+            <div class="tag_box">
+                {% for tag in tags %} 
+                <label><input id="tag{{tag.id}}" type="checkbox" name="tags" value="{{ tag.name }}" onclick="tag_selected(event)"  style="display: none;" >{{ tag.name }}</label>
+                {% endfor %}
+            </div>
+        
+        </section>
+        <section class="button_box">
+            <button id="resetBtn" class="resetBtn" onclick = "location.href = '{% url 'main:somdList' %}' "><i class="fa-solid fa-rotate-right"></i>초기화</button>
+            <button id="searchBtn" class="searchBtn" onclick="searchBtn_click(event)"><i class="fa-solid fa-magnifying-glass"></i> 찾기</button>
+        </section>
+    </div>
+
+
+    <section class="all_somdList">
+        <section class="search_somdList_for_you  middleSomdList"></section>
+        <!-- <div class="section_title">우리대학</div> -->
+        <section class="all_somdList_for_you"></section>
+        <div class="section_title">둘러보기</div>
+    </section>
+</section>  
+
+
+<script>
+const departmentsByCollege = {
+    동국대학교: ['-'],
+    불교대학: ['-', '불교학부', '문화재학과'],
+    문과대학: ['-','국어국문문예창작학부', '영어영문학전공', '영어통번역학전공', '일본학과', '중어중문학과', '철학과', '사학과'],
+    이과대학: ['-','수학과', '화학과', '통계학과', '물리반도체과학부'],
+    법과대학: ['-','법학과'],
+    사회과학대학: ['-','정치외교학전공', '행정학전공', '북한학전공', '경제학과', '국제통상학과', '사회학전공', '미디어커뮤니케이션학전공', '식품산업관리학과', '광고홍보학과', '사회복지학과'],
+    경찰사법대학: ['-','경찰행정학부'],
+    경영대학: ['-','경영학과', '회계학과', '경영정보학과'],
+    바이오시스템대학: ['-', '바이오환경학과', '생명과학과', '식품생명공학과', '의생명공학과'],
+    공과대학: ['-','전자전기공학부', '정보통신공학과', '건설환경공학과', '화공생물공학과', '기계로봇에너지공학과', '건축공학전공', '건축학전공', '산업시스템공학과', '융합에너지신소재공학과'],
+    AI융합대학: ['-','AI소프트웨어융합학부', '컴퓨터공학전공', '멀티미디어소프트웨어공학전공', '인공지능전공', '데이터사이언스전공', '엔터테인먼트테크놀로지전공'],
+    사범대학: ['-','교육학과', '국어교육과', '역사교육과', '지리교육과', '수학교육과', '가정교육과', '체육교육과'],
+    예술대학: ['-','미술학부', '연극학부', '영화영상학과', '스포츠문화학과', '한국음악과'],
+    약학대학: ['-','약학과'],
+    미래융합대학: ['-','융합보안학과', '사회복지상담학과', '글로벌무역학과'],
+};
+// console.log(departmentsByCollege)
+
+if("{{ user.profile.college }}" != ""){
+    let index = departmentsByCollege["{{ user.profile.college}}"].indexOf("{{ user.profile.department }}",0)
+    
+    departmentsByCollege["{{ user.profile.college}}"].splice(index,1)
+    departmentsByCollege["{{ user.profile.college}}"].splice(1,0,"{{ user.profile.department}}");
+    // department_ByCollege
+}
+
+// console.log(departmentsByCollege)
+
+//----유저 솜디 기본 설정하기
+var college_somd ={};
+//솜디를 과별로 구분하기 위해, 미리 박스를 만들어둔다.
+for (const key in departmentsByCollege){
+    college_somd[ key ] = {};
+    var department_Somd = {}; 
+    for(const item of departmentsByCollege[key]){
+        department_Somd[ item ] = [];
+        college_somd[key] = department_Somd;
+    }
+}
+// console.log(college_somd);
+let somds = [];
+let somd = {};
+{% for somd in somds %}
+    somd ={};
+    somd['name'] = "{{ somd.name }}";
+    somd['college'] = "{{ somd.college }}";
+    somd['department'] = "{{ somd.department }}";
+    somd['a_href'] = "{% url 'main:somdFeed' somd.id %}"
+    somd['profileimage'] = "{{somd.profileimage.url}}";
+    somd['tags'] = [];
+    {% for tag in somd.tags.all %}
+        somd['tags'].push( "{{ tag.name }}" );
+    {% endfor %}
+    somds.push(somd);
+    
+    (college_somd[somd['college']])[somd['department']].push(somd);
+
+{% endfor %}
+
+// console.log(somds)
+
+//----솜디 카테고리 출력하기
+
+const allsomdList = document.querySelector(".all_somdList");
+const allsomdList_forYou = document.querySelector(".all_somdList_for_you");
+
+for (const college in departmentsByCollege){
+    const departments = departmentsByCollege[college]
+    let collegeTitle_box = document.createElement("section");
+    collegeTitle_box.className ="collegeTitle_box";
+    if(college == "{{user.profile.college}}" || college =="동국대학교"){
+        allsomdList_forYou.append(collegeTitle_box);
+    }
+    else{
+        allsomdList.append(collegeTitle_box);
+    }
+    let collegeTitle = document.createElement("section");
+    collegeTitle.classList.add('collegeTitle');
+    let text = document.createElement("div");
+    text.innerText = college;
+    let toggle = document.createElement("i");
+    toggle.className = "fa-solid fa-chevron-down";
+    toggle.classList.add("toggle");
+    collegeTitle_box.appendChild(collegeTitle);
+    collegeTitle.appendChild(text);
+    collegeTitle.appendChild(toggle);
+}
+
+
+const openCollege = { //솜디의 카테고리가 열려있는지 닫혀있는지 확인하기
+    불교대학: false,
+    문과대학: false,
+    이과대학: false,
+    법과대학: false,
+    사회과학대학: false,
+    경찰사법대학: false,
+    경영대학: false,
+    바이오시스템대학: false,
+    공과대학: false,
+    AI융합대학: false,
+    사범대학: false,
+    예술대학: false,
+    약학대학: false,
+    미래융합대학: false,
+};
+
+
+// console.log("{{ user.profile.college }}");
+
+function open_College(collegeTitle, toggle_college, toggle_icon){
+    let departments = departmentsByCollege[toggle_college];
+    let college = collegeTitle.innerText;
+
+    let collegeSomdList = document.createElement("section");
+    collegeSomdList.className = "collegeSomdList middleSomdList"
+
+    collegeTitle.parentNode.append(collegeSomdList);
+    
+    for(const department of departments){
+        
+        let list = document.createElement("section");
+        list.className = "list"
+
+        if(college_somd[college][department].length != 0){
+            // console.log(department);
+            
+            if(department != '-'){
+                let departmentTitle = document.createElement("div");
+                departmentTitle.className = "departmentTitle"
+                departmentTitle.innerText = "◦" + department;
+                collegeSomdList.appendChild(departmentTitle);
+            }
+
+            collegeSomdList.appendChild(list);
+            for(const somd of college_somd[college][department]){
+
+                let icon = document.createElement("a");
+                icon.href = somd.a_href;
+                icon.className = "somd icon_box";
+                
+                let iconName = document.createElement("div");
+                iconName.className = "name";
+                iconName.innerText = somd.name;
+
+                let iconImage = document.createElement("div");
+                iconImage.className = "image";
+                iconImage.style = "background-image:url("+somd.profileimage+");"
+                icon.appendChild(iconImage);
+                icon.appendChild(iconName);
+
+
+                list.appendChild(icon);
+            }
+        }
+    }
+
+    toggle_icon.className = "fa-solid fa-chevron-up";
+    openCollege[toggle_college] = true;
+
+    if(collegeTitle.parentNode.querySelector(".list") == null){
+        let warning = document.createElement("a");
+        warning.className ="warning";
+        warning.href = "{% url 'main:somd_new' %}"
+        warning.innerText = toggle_college+"의 소모임이 아직 없습니다.\n소모임을 만들어보세요!"
+        collegeSomdList.appendChild(warning);
+
+        warningIcon = document.createElement("i");
+        warningIcon.className = "fa-solid fa-plus";
+        warning.appendChild(warningIcon);
+    }
+}
+
+function toggleButton_click(event){
+    let collegeTitle = event.target;
+
+    if(event.target.className != "collegeTitle"){
+        collegeTitle = event.target.parentNode;
+    }
+
+    let toggle_college = collegeTitle.firstChild.innerText;
+    let toggle_icon = collegeTitle.lastChild;
+
+    // console.log(toggle_college+toggle_icon);
+    
+    if (openCollege[toggle_college]){ //카테고리 닫을거예요
+        toggle_icon.className = "fa-solid fa-chevron-down";
+        openCollege[toggle_college] = false;
+
+        (collegeTitle.parentNode.lastChild).remove();
+    }
+
+    else{ //카테고리 얼거예요
+            open_College(collegeTitle, toggle_college, toggle_icon);
+        }
+    // console.log(event.target);
+}
+
+
+var collegeTitles = document.getElementsByClassName("collegeTitle");
+// console.log(toggleButtons[2].parentElement.innerText);
+for(collegeTitle of collegeTitles){
+    // console.log(collegeTitle);
+    collegeTitle.addEventListener('click', toggleButton_click);
+    if(collegeTitle.querySelector("div").innerText == "{{ user.profile.college }}"){
+        let toggle_college = collegeTitle.firstChild.innerText;
+        let toggle_icon = collegeTitle.lastChild;
+        open_College(collegeTitle, toggle_college, toggle_icon);
+    }
+}
+
+let search_tag =[];
+
+function tag_selected(event){
+    // console.log(event)
+    let tag = event.target
+    let label = tag.parentNode
+
+    if(tag.checked){
+        label.style.backgroundColor = "#0ECC87"
+        label.style.color = "white"
+        search_tag.push(label.innerText);
+    }
+    else{
+        label.style.backgroundColor = "white"
+        label.style.color = "#0ECC87"
+
+        for(let i = 0; i < search_tag.length; i++) {
+            if (search_tag[i] === label.innerText) {
+                search_tag.splice(i, 1);
+            }
+        }
+    }
+    // console.log(search_tag);
+
+}
+
+function isTagincluded(tag,target_somds){
+    search_results = []
+    for(somd of target_somds){
+        if(somd['tags'].includes(tag)){
+            search_results.push(somd)
+        }
+    }
+    return search_results
+}
+
+function filterBtn_click(event){
+    // search_tag =[]
+    let tag_popup = document.querySelector(".tag_popup");
+    tag_popup.style.display = "flex";
+}
+
+function filterBtn_close(event){
+    let tag_popup = document.querySelector(".tag_popup");
+    tag_popup.style.display = "none";
+}
+
+function searchBtn_click(event){
+    let search_results = somds;
+    let row_tag_box = document.querySelector(".row_tag_box_for_scroll");
+    row_tag_box.replaceChildren();
+
+    let search_somdList_for_you =document.querySelector(".search_somdList_for_you");
+    search_somdList_for_you.replaceChildren();
+
+    for(tag of search_tag){ 
+        let tag_label = document.createElement("div");
+        tag_label.className ="tag_label";
+        tag_label.innerText = tag;
+        search_results = isTagincluded(tag,search_results)
+        row_tag_box.appendChild(tag_label);
+    }
+
+    // console.log(search_results)
+
+    let tag_popup = document.querySelector(".tag_popup");
+    tag_popup.style.display = "none";
+
+    let list = document.createElement("section");
+    list.className = "list"
+    if(search_tag.length == 0){
+        let no_tag = document.createElement("div")
+        no_tag.className = ("notice");
+        no_tag.innerText ="선택된 태그가 없습니다!"
+        row_tag_box.appendChild(no_tag);
+    }
+    if(search_results.length != 0){
+        // console.log(department);
+
+        search_somdList_for_you.appendChild(list);
+        for(const somd of search_results){
+
+            let icon = document.createElement("a");
+            icon.href = somd.a_href;
+            icon.className = "somd icon_box";
+            
+            let iconName = document.createElement("div");
+            iconName.className = "name";
+            iconName.innerText = somd.name;
+
+            let iconImage = document.createElement("div");
+            iconImage.className = "image";
+            iconImage.style = "background-image:url("+somd.profileimage+");"
+            icon.appendChild(iconImage);
+            icon.appendChild(iconName);
+
+
+            list.appendChild(icon);
+        }
+    }
+    else{
+        let warning = document.createElement("a");
+        warning.className ="warning";
+        warning.href = "{% url 'main:somd_new' %}"
+        warning.innerText = "해당하는 소모임이 아직 없습니다.\n소모임을 만들어보세요!"
+        search_somdList_for_you.appendChild(warning);
+
+        warningIcon = document.createElement("i");
+        warningIcon.className = "fa-solid fa-plus";
+        warning.appendChild(warningIcon);
+    }
+
+}
+
+
+
+
+</script>
+<!-- <script src="{% static 'js/scroll_somdList.js' %}"></script> -->
+{% endblock %}

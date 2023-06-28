@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/somd_new.css' %}">
+<section class="header">
+    <section class="mainTitle">
+        <a href="{% url 'main:somdFeed' somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <!-- <div>{{ somd.name }}</div> -->
+        <button class="header_button-2" button type="submit" form="somd_edit">
+            <i class="fa-solid fa-check"></i> 솜디수정완료
+        </button>
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+
+<section class="somdPage">
+
+    <form id="somd_edit" action="{% url 'main:somd_update' somd.id %}" method="POST" enctype="multipart/form-data">
+        <section class="somd_new">
+        {% csrf_token %}
+        <section class="feed_header">
+            <div class="back-pic-preview background image" style="background-image:url({{somd.backgroundimage.url}});">
+                <i class="fa-regular fa-image"></i>
+                <label for="back-pic-input">
+                    <input type="file" accept="image/*" name="back_pic" id="back-pic-input">
+                </label>
+            </div>
+            
+            <div class="profile-pic-preview profile image" style="background-image:url({{somd.profileimage.url}});">
+                <i class="fa-regular fa-image"></i>
+                <label for="profile-pic-input">
+                    <input type="file" accept="image/*" name="profile_pic" id="profile-pic-input">
+                </label>
+            </div>
+        </section>
+
+        <section class = "info">
+            <section>
+                <div class="label">소모임명</div>
+                <input class="text" type="text" name="somdname" required value="{{ somd.name }}">
+            </section>
+            
+            <section>
+                <div class="label">소속학과</div>
+                <div class="select">
+                    <select id="college" name="college" onchange="selectDepartments()" required>
+                        <option value="" selected disabled>단과대</option>
+                        <option value="동국대학교">동국대학교</option>
+                        <option value="불교대학">불교대학</option>
+                        <option value="문과대학">문과대학</option>
+                        <option value="이과대학">이과대학</option>
+                        <option value="법과대학">법과대학</option>
+                        <option value="사회과학대학">사회과학대학</option>
+                        <option value="경찰사법대학">경찰사법대학</option>
+                        <option value="경영대학">경영대학</option>
+                        <option value="바이오시스템대학">바이오시스템대학</option>
+                        <option value="공과대학">공과대학</option>
+                        <option value="AI융합대학">AI융합대학</option>
+                        <option value="사범대학">사범대학</option>
+                        <option value="예술대학">예술대학</option>
+                        <option value="약학대학">약학대학</option>
+                        <option value="미래융합대학">미래융합대학</option>
+                    </select>
+                    <select id="department" name="department" required>
+                        <option value="" selected disabled>학과</option>
+                    </select>
+                </div>
+            
+            </section>
+
+            <section>
+                <div class="label">한줄소개</div>
+                <input class="text" type="text" name = "intro" value="{{ somd.intro }}">
+            </section>
+            
+            <section>
+                <div class="label">카테고리</div>
+                <div class="tag">
+                    <div class="tag_box">
+                        {% for tag in tags %} 
+                        <label><input id="tag{{tag.id}}" type="checkbox" name="tags" value="{{ tag.name }}" onclick="tag_selected(event)"  style="display: none;" >{{ tag.name }}</label>
+                        {% endfor %}
+                    </div>
+                    <div class="input_tag">
+                        <input id="add_tag" type="text" name="add_tag" placeholder="원하는 태그가 없다면 추가해보세요!">
+                    <button type="button" id="add_tag_button" onclick="addTag(event)"> <i class="fa-solid fa-plus"></i> </button>
+                    </div>
+    
+                </div>
+
+            </section>
+
+    
+
+            <section>
+                <div class="label">SNS 링크</div>
+                <input class="text" type="text" name = "snslink" value="{{ somd.snslink }}">
+            </section>
+
+        </section>
+    </section>
+    </section> 
+    </form>
+</section>
+
+
+<script>
+
+const profilePicInput = document.getElementById('profile-pic-input');
+const profilePicPreview = document.querySelector('.profile-pic-preview');
+
+profilePicInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function(event) {
+        profilePicPreview.style.backgroundImage = `url(${event.target.result})`;
+    });
+
+    reader.readAsDataURL(file);
+});
+
+const backPicInput = document.getElementById('back-pic-input');
+const backPicPreview = document.querySelector('.back-pic-preview');
+backPicInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', function(event) {
+        backPicPreview.style.backgroundImage = `url(${event.target.result})`;
+    });
+
+    reader.readAsDataURL(file);
+});
+
+
+const departmentsByCollege = {
+    동국대학교: ['-'],
+    불교대학: ['-', '불교학부', '문화재학과'],
+    문과대학: ['-','국어국문문예창작학부', '영어영문학전공', '영어통번역학전공', '일본학과', '중어중문학과', '철학과', '사학과'],
+    이과대학: ['-','수학과', '화학과', '통계학과', '물리반도체과학부'],
+    법과대학: ['-','법학과'],
+    사회과학대학: ['-','정치외교학전공', '행정학전공', '북한학전공', '경제학과', '국제통상학과', '사회학전공', '미디어커뮤니케이션학전공', '식품산업관리학과', '광고홍보학과', '사회복지학과'],
+    경찰사법대학: ['-','경찰행정학부'],
+    경영대학: ['-','경영학과', '회계학과', '경영정보학과'],
+    바이오시스템대학: ['-', '바이오환경학과', '생명과학과', '식품생명공학과', '의생명공학과'],
+    공과대학: ['-','전자전기공학부', '정보통신공학과', '건설환경공학과', '화공생물공학과', '기계로봇에너지공학과', '건축공학전공', '건축학전공', '산업시스템공학과', '융합에너지신소재공학과'],
+    AI융합대학: ['-','AI소프트웨어융합학부', '컴퓨터공학전공', '멀티미디어소프트웨어공학전공', '인공지능전공', '데이터사이언스전공', '엔터테인먼트테크놀로지전공'],
+    사범대학: ['-','교육학과', '국어교육과', '역사교육과', '지리교육과', '수학교육과', '가정교육과', '체육교육과'],
+    예술대학: ['-','미술학부', '연극학부', '영화영상학과', '스포츠문화학과', '한국음악과'],
+    약학대학: ['-','약학과'],
+    미래융합대학: ['-','융합보안학과', '사회복지상담학과', '글로벌무역학과'],
+};
+
+    // 학과 드롭다운을 업데이트하는 함수
+    function selectDepartments() {
+        const collegeSelect = document.getElementById('college');
+        const departmentSelect = document.getElementById('department');
+        const selectedCollege = collegeSelect.value;
+
+        // 기존 학과 목록 초기화
+        departmentSelect.innerHTML = '<option value="" selected disabled>학과</option>';
+
+        // 선택된 단과대에 해당하는 학과 목록 생성
+        if (selectedCollege && departmentsByCollege[selectedCollege]) {
+        const departments = departmentsByCollege[selectedCollege];
+        for (const department of departments) {
+            const option = document.createElement('option');
+            option.value = department;
+            option.text = department;
+            departmentSelect.appendChild(option);
+        }
+    }
+}
+
+document.querySelector("#college").value = ("{{ somd.college }}");
+selectDepartments()
+document.querySelector("#department").value = ("{{ somd.department }}");
+
+let now_label =""
+
+{% for somd_tag in somd.tags.all %}
+    {% for tag in tags.all %}
+        {% if tag == somd_tag %}
+            document.getElementById("tag{{tag.id}}").checked = true;
+            
+            now_label = document.getElementById("tag{{tag.id}}").parentNode;
+            
+            now_label.style.backgroundColor = "#0ECC87"
+            now_label.style.color = "white"
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+
+
+let new_tag_num = 0
+
+function addTag(event){
+    let add_tag_vlaue = document.querySelector("#add_tag").value
+
+    if(add_tag_vlaue != ""){
+        let new_label = document.createElement("label");
+        let new_checkbox = document.createElement("input");
+        new_checkbox.type ="checkbox";
+
+        new_checkbox.name = "tags";
+        new_checkbox.value =  add_tag_vlaue;
+        new_checkbox.checked = true;
+
+        let id = "new_tag"+ new_tag_num
+
+        new_checkbox.id = id;
+        new_label.htmlFor = id;
+        new_label.id = "label"+id;
+        
+        new_label.style.backgroundColor = "#0ECC87"
+        new_label.style.color = "white"
+
+        new_checkbox.addEventListener('click',function(event){
+            // console.log("label"+id);
+            let label = document.getElementById("label"+id)
+            // console.log(label)
+
+            let tag = event.target
+            if(tag.checked){
+                label.style.backgroundColor = "#0ECC87"
+                label.style.color = "white"
+            }
+            else{
+                label.style.backgroundColor = "white"
+                label.style.color = "#0ECC87"
+            }
+        })
+
+        new_tag_num = new_tag_num+1;
+
+        document.querySelector(".tag_box").appendChild(new_checkbox);
+        document.querySelector(".tag_box").appendChild(new_label);
+        
+        new_label.innerText = add_tag_vlaue;
+
+        document.querySelector("#add_tag").value = ""
+        new_checkbox.style.display ="none";
+    }
+}
+
+
+function tag_selected(event){
+    // console.log(event)
+    let tag = event.target
+    let label = tag.parentNode
+
+    if(tag.checked){
+        label.style.backgroundColor = "#0ECC87"
+        label.style.color = "white"
+    }
+    else{
+        label.style.backgroundColor = "white"
+        label.style.color = "#0ECC87"
+    }
+}
+
+</script>
+
+
+{% endblock %}

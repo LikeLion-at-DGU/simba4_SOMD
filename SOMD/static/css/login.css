@@ -1,0 +1,73 @@
+.SDcontainer{
+    justify-content: center;
+}
+
+.upperMain{
+ display: flex;
+
+ justify-content: center;
+ align-items: center;
+
+ text-align: center;
+ padding: 20px 20px;
+}
+
+.maincolor {
+    font-weight: bold; 
+    font-size: 50px;
+}
+
+.title{
+ font-weight: bold;
+ font-size: 50px;
+ color: #0ecc87
+}
+
+
+.upperMainText {
+ padding-left: 10px;
+}
+
+span{
+ color:#0ecc87 !important;
+ font-size: 15px;
+}
+
+.lowerMain{
+ border: 2px solid #0ecc87;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ /* flex-direction: column; */
+ padding: 30px 20px;
+ margin: 0 0 70px 0;
+ width: 90%;
+ height: 200px;
+
+ left: 35%;
+ box-shadow: 0px 7px 3px -2px gray;
+}
+
+.btndiv{
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+}
+
+
+.inputbtn{
+ border: 1px solid #0ecc87;
+}
+
+.loginbtn{
+ background-color: #0ecc87;
+ border: 0;
+ width: 100px;
+}
+
+/* 로그인 실패했을 때 문구 */
+.errorMsg {
+    margin-bottom: 15px;
+    color: rgb(234, 66, 66);
+}

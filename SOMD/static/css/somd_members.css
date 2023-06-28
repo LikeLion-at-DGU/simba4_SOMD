@@ -1,0 +1,126 @@
+.joinList{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.section_title{
+  /* padding:0px 10px; */
+  color: #0ECC87;
+  font-size: 25px;
+  /* margin-top: 20px; */
+  /* margin-top: 40px; */
+  margin-bottom: 10px;
+  padding: 0px 10px 5px 10px;
+  border-bottom: solid lightgrey 1px;
+}
+a {
+  margin-left: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+}
+
+.titlebtn {
+  margin-bottom: 20px;
+}
+
+.fas {
+  color: white;
+  font-weight: 900;
+}
+
+.mainForm {
+  margin: 0 10px 0 20px;
+}
+
+.newMemberForm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+}
+
+.newMemberName {
+  height: 50px;
+  width: 80px;
+  /* font-weight: bold; */
+  color: #0ecc87;
+  padding: 10px;
+  flex-shrink: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+    display: flex;
+  align-items: center;
+
+}
+
+.newMemberFormTitle {
+  border: 1px solid #0ecc87;
+  flex-grow: 1;
+  max-width: 260px;
+  height: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+
+}
+
+.manageMemberForm{
+  border: solid 3px #0ECC87;;
+  border-radius: 10px;
+  background-color: #0ECC87;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 10px 10px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.manageMemberForm>.icon{
+  margin-right: 5px;
+}
+.manageMemberForm>.information{
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding: 0px 10px;
+}
+
+.manageMemberForm>.information>.name{
+  font-size: 15px;
+}
+.manageMemberForm>.information>.intro{
+  font-size: 8px;
+  height: 10px;
+  margin-bottom: 3px;
+    text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.manageMemberForm>.information>.college{
+  font-size: 8px;
+}
+
+.deleteBtn>i{
+  font-size: 25px;
+  color:white;
+}
+
+.somdList .join{
+  border: solid 3px #0ECC87;;
+  border-radius: 10px;
+  background-color: #0ECC87;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 10px 10px;
+  margin-bottom: 10px;
+  color: white;
+}

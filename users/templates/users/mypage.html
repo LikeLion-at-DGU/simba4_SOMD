@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/myPage.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <i class="fa-solid fa-wrench"></i>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>마이페이지</div>
+         <a class="header_button" href="{% url 'users:myPage_edit' %}" class="button">
+            <i class="fa-solid fa-pen"></i> 수정
+        </a>
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+
+<section class="somdPage">
+    <section class="myPage">
+        <section class="top">
+            <div class="profile-pic-preview profile image" style="background-image:url({{user.profile.profile_pic.url}});"></div>
+        </section>
+        <section class="middle">
+            <div class="fixinfo">{{ user.profile.email }}</div>
+            <div class="fixinfo">{{ user.profile.birthday|date:'Y.m.d' }} / {{ user.profile.gender }}</div>
+        </section>
+
+        <section class="item">
+            <div class="label">이름</div>
+            <div class="text">{{ user.username}}</div>
+        </section>
+
+        <section class="item">
+            <div class="label">닉네임</div>
+            <div class="text" style="justify-content: start;">{{ user.profile.nickname }}  <p style="color:lightgrey; margin-bottom:0px; margin-left: 5px;">  ({{ user.profile.name }})</p></div>
+        </section>
+
+        <section class="item">
+            <div class="label">자기소개</div>
+            <div class="long text">{{ user.profile.intro }}</div>
+        </section>
+
+        <section class="bottom item">
+            <div class="label">소속대학</div>
+            <div class="text">
+                {{ user.profile.college }}
+                <br>
+                {{ user.profile.department }}
+            </div>
+        </section>
+
+
+    </section>
+
+</section>
+{% endblock %}

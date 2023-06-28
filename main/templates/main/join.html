@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- <link rel="stylesheet" type="text/css" href="{% static 'css/post.css' %}"> -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/join.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <a href="{% url 'main:somdFeed' somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>{{ somd.name }}</div>
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage">
+    <section class="mainTitle">
+            <i class="far fa-handshake"></i>
+            <p>가입하기</p>
+    </section>
+
+    <form action="{% url 'main:wantTojoin' somd.id  %}" class="wantTojoin" method="POST" enctype="multipart/form-data">
+       {% csrf_token %}
+        <div class="titlebtn">
+            <div class="button">가입신청서</div>
+        </div>
+    
+        <div class="mainForm">
+            <section class="joinForm">
+                <input type="text" name="title" class="titleForm" placeholder="TITLE" maxlength="24">
+                <textarea type="text" name="motivation" class="textForm" placeholder="TEXT"></textarea>
+            </section>
+        </div>
+        <section class="submitButtonSection">
+            <button type="submit" class="button">제출하기</button>
+        </section>
+    </section>
+
+    </form>
+    
+
+
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% load static %}
+
+<section class="BlurForSidebar"></section>
+<section class="sidebar_container">
+
+  <section class="sidebar">
+    {%if user.is_authenticated %}
+    <a class="logout" href="{% url 'accounts:logout' %}">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      로그아웃
+    </a>
+    <div class="profile">
+      <div class="image" style="background-image:url({{user.profile.profile_pic.url}});"></div>
+      <div class="info">
+        <div class="name">{{ user.profile.nickname }}</div>
+        <div class="department">{{ user.profile.college }}</div>
+        <div class="department">{{ user.profile.department }}</div>
+      </div>
+      <!-- <i class="fa-solid fa-angle-right"></i> -->
+    </div>
+    {% else %}
+    <div class="profile" style="margin-top: 50px;" onClick="window.location.href = '/'">
+      <i class="fa-solid fa-hand-point-up" style=" padding-right:10px; color:#0ecc87"></i>
+      <div style="color:lightgrey; flex-grow:1;">로그인이 필요합니다!</div>
+      <i class="fa-solid fa-chevron-right"  style="color:lightgrey" ></i>
+    </div>
+
+    {%endif%}
+
+
+    <section class="linkList">
+      <a class="sidebar_menu" href="{% url 'users:myPage' %}">마이페이지</a>
+      <a class="sidebar_menu" href="{% url 'main:scrap_view' %}">스크랩한 게시물</a>
+    </section>
+  </section>
+ 
+  <div class="bottom">
+    <div class="icon sidebar_button_close">
+      <i class="fa-solid fa-xmark"></i>
+    </div>
+  </div>
+</section>
+<section class="navbar">
+  <!-- 메인페이지 링크 연결 -->
+  <a class="icon" href="{% url 'main:mainPage' %}">
+    <i class="mainPageIcon fa-solid fa-house"></i>
+    <!-- <div class="text">메인홈</div> -->
+  </a>
+
+  <!-- 나의 솜디 링크 연결 -->
+  <a class="icon" href="{% url 'main:mySomd' %}">
+    <i class="mySomdIcon fa-solid fa-user"></i>
+    <!-- <div class="text">나의솜디</div> -->
+  </a>
+
+  <!-- 솜디 게시판 링크 연결 -->
+  <a class="icon" href="{% url 'main:somdList' %}">
+    <!-- <div class="somdListIcon">
+                <i class="fa-solid fa-stop"></i>
+                <i class="fa-solid fa-stop"></i>
+                <i class="fa-solid fa-stop"></i>
+                <i class="fa-solid fa-stop"></i>
+            </div> -->
+    <i class="somdListIcon fa-solid fa-magnifying-glass"></i>
+    <!-- <i class="fa-solid fa-grid-2"></i> -->
+    <!-- <div class="text">전체솜디</div> -->
+  </a>
+
+  <!-- 마이페이지 링크 연결 -->
+  <a class="icon sidebar_button">
+    <i class="fa-solid fa-bars"></i>
+    <!-- <div class="text">더보기</div> -->
+  </a>
+</section>
+
+
+
+<script src="{% static 'js/header.js' %}"></script>

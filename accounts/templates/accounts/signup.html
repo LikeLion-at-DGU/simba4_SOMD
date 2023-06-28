@@ -1,0 +1,292 @@
+{% extends 'start_base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/reset.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/signup.css' %}">
+
+<section class="somdPage">
+
+
+<div class="upperMain">
+    <div class="upperMainText" onClick="window.location.href = '/'">
+        <div style="display: flex; align-items: center;" >
+            <div class="SomDLogo image" style="width: 50px; height: 50px; margin-right: 10px;"></div> <h1>SOM D</h1>
+        </div>
+    </div>
+    <h2>동국대 소모임 네트워킹 서비스</h2>
+</div>
+
+<form action="{% url 'accounts:signup' %}" method="POST" onsubmit="return false;" enctype="multipart/form-data">
+    {% csrf_token %}
+    <section class="titleSection">
+        <h3 class="title">회원가입을 위해 개인정보 입력해주세요!</h3>
+    </section>
+    {% if messages %}
+    {% for message in messages %}
+        <div style="color: red;">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    <section class="mainbody">
+        <div class="mainCol">
+            <div class="inputBlank">
+                <div class="label">이름</div>
+                <input class="input_text" type="text" name="name"  required>
+            </div>
+            <div class="inputBlank">
+                <div class="label">닉네임</div>
+                <input class="input_text" type="text" name="nickname" required>
+            </div>
+            <div class="inputBlank">
+                <div class="label">성별</div>
+                <!-- <input type="text" name="gender" placeholder="남/여" required> -->
+
+                <select id="gender" name="gender" class="selectOption">
+                    <option value="" selected disabled>성별</option>
+                    <option value="MALE">남</option>
+                    <option value="FEMALE">여</option>
+                    <option value="NONE">입력하지 않음</option>
+                </select>
+            </div>
+            
+            <div class="inputBlank">
+                <div class="label">생년월일</div>
+                <input class="input_text" type="text" id="birth" name="birth" placeholder="YYYYMMDD" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" required maxlength="8">
+            </div>
+            <div class="inputBlank">
+                <div class="label">소속학과</div>
+    
+                <div class="select_box">
+                    <select id="college" name="college" class="selectOption" onchange="selectDepartments()" required>
+                        <option value="" selected disabled>단과대</option>
+                        <option value="불교대학">불교대학</option>
+                        <option value="문과대학">문과대학</option>
+                        <option value="이과대학">이과대학</option>
+                        <option value="법과대학">법과대학</option>
+                        <option value="사회과학대학">사회과학대학</option>
+                        <option value="경찰사법대학">경찰사법대학</option>
+                        <option value="경영대학">경영대학</option>
+                        <option value="바이오시스템대학">바이오시스템대학</option>
+                        <option value="공과대학">공과대학</option>
+                        <option value="AI융합대학">AI융합대학</option>
+                        <option value="사범대학">사범대학</option>
+                        <option value="예술대학">예술대학</option>
+                        <option value="약학대학">약학대학</option>
+                        <option value="미래융합대학">미래융합대학</option>
+                    </select>
+                    <select id="department" name="department" class="selectOption" required>
+                        <option value="" selected disabled>학과</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <section class="inputAndAlert">
+                <div class="inputBlank">
+                    <div class="label">ID</div>
+                    <input class="input_text" type="text" id="username" name="username" required>
+                </div>
+                <span class="errorMsg" id="idError"></span>
+            </section>
+
+            
+
+            <section class="inputAndAlert">
+                <div class="inputBlank">
+                    <div class="label">PW</div>
+                    <input class="input_text" type="password" id="password" name="password" required>
+                    
+                </div>
+                <span class="errorMsg" id="pwError"></span>
+            </section>
+
+
+
+            <section class="inputAndAlert">
+                <div class="inputBlank">
+                    <div class="label">PW CONFIRM</div>
+                    <input class="input_text" type="password" id="confirm" name="confirm" required>
+                </div>
+                <span class="errorMsg" id="pwConfirmError"></span>
+            </section>
+
+            <div class="inputBlank">
+                <div class="label">Email</div>
+                <input class="input_text" type="text" name="email" required>
+            </div>
+
+            <div class="inputBlank"  style="display: flex; width: 100%; justify-content: center; align-items: center;">
+                <div class="label">동국대 인증</div>
+                <input style="flex-grow: 1;"  type ="file" accept="image/*" name ="certification" required>
+            </div>
+            <div style="width: 100%; color:lightgrey">동국패스 캡쳐 사진을 첨부해주세요.<br> 잘못된 사진을 첨부할시 강퇴당할 수 있습니다.</div>
+        </div>
+    </section>
+
+    <input class="signupBtn" type="submit" value="회원가입" style=" color:white" onclick="validateForm() ">
+    <!-- <button class="signupBtn" type='submit' value="회원가입" style="color:white">회원가입</button> -->
+</form>
+
+</section>
+
+<script>
+    // 각 단과대에 해당하는 학과 목록
+    const departmentsByCollege = {
+        불교대학: ['불교학부', '문화재학과'],
+        문과대학: ['국어국문문예창작학부', '영어영문학전공', '영어통번역학전공', '일본학과', '중어중문학과', '철학과', '사학과'],
+        이과대학: ['수학과', '화학과', '통계학과', '물리반도체과학부'],
+        법과대학: ['법학과'],
+        사회과학대학: ['정치외교학전공', '행정학전공', '북한학전공', '경제학과', '국제통상학과', '사회학전공', '미디어커뮤니케이션학전공', '식품산업관리학과', '광고홍보학과', '사회복지학과'],
+        경찰사법대학: ['경찰행정학부'],
+        경영대학: ['경영학과', '회계학과', '경영정보학과'],
+        바이오시스템대학: ['바이오환경학과', '생명과학과', '식품생명공학과', '의생명공학과'],
+        공과대학: ['전자전기공학부', '정보통신공학과', '건설환경공학과', '화공생물공학과', '기계로봇에너지공학과', '건축공학전공', '건축학전공', '산업시스템공학과', '융합에너지신소재공학과'],
+        AI융합대학: ['AI소프트웨어융합학부', '컴퓨터공학전공', '멀티미디어소프트웨어공학전공', '인공지능전공', '데이터사이언스전공', '엔터테인먼트테크놀로지전공'],
+        사범대학: ['교육학과', '국어교육과', '역사교육과', '지리교육과', '수학교육과', '가정교육과', '체육교육과'],
+        예술대학: ['미술학부', '연극학부', '영화영상학과', '스포츠문화학과', '한국음악과'],
+        약학대학: ['약학과'],
+        미래융합대학: ['융합보안학과', '사회복지상담학과', '글로벌무역학과'],
+    };
+
+    // 학과 드롭다운을 업데이트하는 함수
+    function selectDepartments() {
+        const collegeSelect = document.getElementById('college');
+        const departmentSelect = document.getElementById('department');
+        const selectedCollege = collegeSelect.value;
+
+        // 기존 학과 목록 초기화
+        departmentSelect.innerHTML = '<option value="" selected disabled>학과</option>';
+
+        // 선택된 단과대에 해당하는 학과 목록 생성
+        if (selectedCollege && departmentsByCollege[selectedCollege]) {
+        const departments = departmentsByCollege[selectedCollege];
+        for (const department of departments) {
+            const option = document.createElement('option');
+            option.value = department;
+            option.text = department;
+            departmentSelect.appendChild(option);
+        }
+    }
+}
+
+function isBirthday(year, month, day) {
+            var today = new Date(); // 날짜 변수 선언
+            var yearNow = today.getFullYear(); // 올해 연도 가져옴
+
+        
+        // 연도 1900 보다 작거나 yearNow 보다 크다면 false를 반환
+            if (year.length == 4 && (1900 > year || year > yearNow)){
+                
+                return false;
+            } else if (month && (month < 1 || month > 12)) {
+                
+                return false;
+            } else if (day && (day < 1 || day > 31)) {
+                
+                return false;
+            } else if ((month==4 || month==6 || month==9 || month==11) && day==31) {
+                
+                return false;
+            } else if (month == 2) {
+
+                var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+                if (day>29 || (day==29 && !isleap)) {
+                    
+                    return false;
+                } else {
+                    return true;
+                } //end of if (day>29 || (day==29 && !isleap))
+            } else {
+                return true;
+            }//end of if
+    }
+
+function validateForm() {
+
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var confirm_password = document.getElementById('confirm').value;
+
+    var college = document.getElementById('college').value;
+    var department = document.getElementById('department').value;
+    var birthday = document.getElementById('birth').value;
+
+    var year = birthday.substring(0,4);
+    var month = birthday.substring(4,6);
+    var day = birthday.substring(6,8);
+
+    
+    var isValidBirthday = false
+    var isValidUsername = false;
+    var isValidPassword = false;
+    var isEqualPassword = false;
+
+    if (!college||!department||!birthday){
+        alert("정보를 모두 입력해주세요.");
+        return false;
+    }
+    // 생년월일 확인
+    if (!isBirthday(year, month, day)) {
+        alert("생년월일이 올바르지 않습니다.");
+        document.getElementById('birth').value = '';
+        return false;
+    } else {
+        isValidBirthday = true;
+    }
+
+    // 아이디 형식 확인
+    if (!/^[a-zA-Z0-9_-]{4,16}$/.test(username)) {
+        document.getElementById("idError").innerText = "ID: 영문자, 숫자, -, _를 선택하여 4~16자";
+        return false;
+    } else {
+        isValidUsername = true;
+        document.getElementById("idError").innerText = "";
+    }
+    // 비밀번호 형식 확인
+    if (!/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+        document.getElementById("pwError").innerText = "PW: 영문자, 숫자, 특수문자(@$!%*?&)를 모두 포함하여 8자 이상";
+        return false;
+    } else {
+        isValidPassword = true;
+        document.getElementById("pwError").innerText = "";
+    }
+
+    // 비밀번호 일치 여부 확인
+    if (password !== confirm_password) {
+        document.getElementById("pwConfirmError").innerText = "비밀번호가 일치하지 않습니다.";
+        return false;
+    } else  {
+        isEqualPassword = true;
+        document.getElementById("pwConfirmError").innerText = "";
+    }
+
+    if (!isValidBirthday) {
+        document.getElementById('birthday').value = '';
+    } else if (!isValidUsername) {
+        document.getElementById('username').value = '';
+    }
+    else if (!isValidPassword) {
+        document.getElementById('password').value = '';
+        document.getElementById('confirm').value = '';
+    } else if (!isEqualPassword) {
+        document.getElementById('confirm').value = ''; 
+    } else {
+        document.querySelector("form").submit();
+        return true;
+    }
+}
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // SOM D 로고 클릭 시 메인 페이지로 이동
+        document.querySelector('.SomDLogo').addEventListener('click', function() {
+        window.location.href = '/';  
+        });
+      // SOM D 텍스트 클릭 시 메인 페이지로 이동
+        document.querySelector('.upperMainText').addEventListener('click', function() {
+        window.location.href = '/';  
+        });
+    });
+</script>
+{% endblock %}

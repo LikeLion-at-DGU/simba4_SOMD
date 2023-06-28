@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/mainPage.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/post.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <i class="fa-solid fa-house"></i>
+        <div>
+            메인페이지
+        </div>
+        {%if user.is_authenticated %}
+        {% if alrams.new %}
+            <i class="fa-solid fa-bell" onclick="location.href = {% url 'main:alram' %}"></i>
+            {% else %} 
+            <i class="fa-solid fa-bell" style="color:lightgrey" onclick="location.href = {% url 'main:alram' %}"></i>
+            {% endif %}
+        {%endif%}
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+<section class="subTitle"><i class="fa-solid fa-kiwi-bird"></i> New Post</section>
+<section class="somdPage">
+    <!-- <div class="NEED_TO_LOGIN"><a class="logout" href="{% url 'accounts:logout' %}">로그인하세요</div> -->
+{%if user.is_authenticated %}
+    {% if somds %}
+    <section class="postContainer linebyline_post">
+        <div class="list">
+            {% if posts %}
+            <section class="Post">
+                {% for post in posts %}
+                <div class="post_box">
+                    <section class="post_header">
+                        <div class="profile">
+                            <div class="image" style="background-image:url({{ post.writer.profile.profile_pic.url }});"></div>
+                            <div class="name">
+                                <div class="username">{{ post.writer.profile.nickname }}</div>
+                                <div class="somdname">{{post.somd.name}}</div>
+                            </div>
+                        </div>
+                    </section>
+                    <a class="about_post" href="{% url 'main:somd_post_view' post.id %}">
+
+                        {% if post.images.all %}
+                            
+                            <div class="image" style="background-image:url( {{ post.images.first.image.url }} );">
+                            {% if post.images.all|length > 1 %}
+                                <div class="image_more">
+                                    <i class="fa-solid fa-plus"></i>
+                                </div>
+                        {% endif %}
+                    </div>
+                        {% else %}
+                            <div class="nonimage"></div>
+                        {% endif %}
+                        <div class="text">
+                            <div class="title">{{ post.title }}</div>
+                            <div class="body">{{ post.summary }}</div>
+                            <!-- <div class="date">{{post.pub_date}}</div> -->
+                        </div>
+                    </a>
+                    <section class="post_footer">
+                        <div class="icon">
+                            <div class="like">
+                                <i class="fa-solid fa-heart"></i>
+                                <div>{{ post.like_count }}</div>
+                            </div>
+                            <div class="comment">
+                                <i class="fa-regular fa-message"></i>
+                                <div>{{ post.comment_count }}</div>
+                            </div>
+                        </div>
+
+                    </section>
+                </div>
+                {% endfor %}
+                {% else %}
+                <section class="warning">아직 포스트가 없습니다!</section>
+            {% endif %}
+        </section>
+    {% endif %}
+        </div>
+        </section>
+    {% else %}
+        <section class="warning" onclick="location.href=window.location.href = '/'; ">
+            최신 게시글을 보기위해서는<br>
+            로그인이 필요합니다!
+        </section>
+    {%endif%}
+</section> 
+<section style="height:60px; flex-shrink: 0; border-radius: 10px; box-shadow: 0 0px 5px rgba(0, 0, 0, 0.3); width: 100%; margin: 10px 0px; background-color: #0ecc87; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white;" onclick="window.open('https://forms.gle/z6ALninKHmvLVw5H7')">
+    <div style="display: flex; font-size: 15px;  justify-content: center; align-items: center;">
+        <i class="fa-solid fa-heart"></i>
+        <div style="margin: 0px 10px;">당신의 피드백을 기다리고 있어요!</div>
+        <i class="fa-solid fa-heart"></i>
+    </div>
+    <div style="font-size: 5px;">
+        <div style="margin-to: 10px;">클릭시 폼 링크로 이동합니다!</div>
+    </div>
+    <!-- <i class="fa-solid fa-chevron-right" style="padding-top: 3px;"></i> -->
+</section>
+
+
+<script src="{% static 'js/postContainer.js' %}"></script>
+
+{% endblock %}

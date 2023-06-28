@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/alram.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <i class="fa-solid fa-bell"></i>
+        <div>솜디 로그</div>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div>{{ somd.name }}</div>
+        <!-- <a href="" class="button"><span><i class="fa-solid fa-pen"></i> 글수정</span></a> -->
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage">
+<section class="alramPage">
+    
+    {% if alrams %}
+    {%for alram in alrams.alrams.all reversed %}
+        {% if alram.type == "somdReject" %}
+        <div class="somdReject alram">
+            <div class="date">
+                {{alram.date}}
+            </div>
+            <section class="alram_about">
+                <div class="text">
+                    {{alram.somd.name}}의 가입이 거절되었습니다.
+                </div>
+            </section>
+        
+        {% elif alram.type == "somdAccept" %}    
+        <div class="somdAccept alram" onclick ="location.href = '{% url 'main:somdFeed' alram.somd.id %}'">
+            <div class="date">
+                {{alram.date}}
+            </div>
+            <section class="alram_about">
+                <div class="image"
+                    style="background-image:url({{alram.somd.profileimage.url}});"></div>
+                <div class="text">
+                    {{alram.somd.name}}에 가입되셨습니다!
+                </div>
+                <i class="fa-solid fa-chevron-right"></i>
+            </section>
+        {% elif alram.type == "userJoin" %}    
+        <div class="somdJoin alram" onclick ="location.href = '{% url 'main:somd_members' alram.somd.id %}'">
+            <div class="date">
+                {{alram.date}}
+            </div>
+            <section class="alram_about">
+                <div class="image profile"
+                    style="background-image:url({{alram.sendUser.profile.profile_pic.url}});"></div>
+                <div class="text">
+                    {{alram.sendUser.profile.nickname}}님이 {{alram.somd.name}}에 가입을 요청했습니다!
+                </div>
+                <i class="fa-solid fa-user-plus"></i>
+            </section>
+        {% elif alram.type == "userDelete" %}    
+        <div class="somdReject alram">
+            <div class="date">
+                {{alram.date}}
+            </div>
+            <section class="alram_about">
+                <div class="text">
+                    더 이상 {{alram.somd.name}}에서 활동하실 수 없습니다...
+                </div>
+            </section>
+        {%endif%}
+        </div>
+    {%endfor%}
+    
+    {%endif%}
+    
+</section>
+</section>
+    
+{% endblock %}

@@ -1,0 +1,392 @@
+/* ---- 헤더 ---- */
+.sidebar_menu:focus, .sidebar_menu:active ,.sidebar_menu:hover{
+  color: #282828;
+}
+.header > .mainTitle > a > .fa-chevron-left:focus {
+  color: #0ecc87;
+}
+.header > .mainTitle > a > .fa-chevron-left:hover {
+  color: #0ecc87;
+}
+
+.header {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+
+  width: 100%;
+  height: 50px;
+
+  z-index: 3;
+  background-color: white;
+  border-bottom: solid 1px lightgrey;
+
+  display: flex;
+  align-items: center;
+  justify-content: end;
+
+  padding: 0px 3px;
+}
+
+.mainTitle {
+  width: 100%;
+  /* margin:15px 0px 5px 0px; */
+  padding: 0px 5px;
+  color: #0ecc87;
+  font-weight: 500;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.mainTitle i:nth-child(1) {
+  padding-right: 10px;
+}
+
+.mainTitle i {
+  /* padding-right: 10px; */
+  font-size: 25px;
+  font-weight: 800;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.mainTitle > div {
+  flex-grow: 1;
+  font-weight: 800;
+  font-size: 20px;
+}
+
+.EmptyForHeader {
+  z-index: 2;
+  width: 100%;
+  height: 60px;
+
+  flex-shrink: 0;
+}
+
+.header > .logo {
+  text-decoration: none;
+  color: #0ecc87;
+  font-size: 20px;
+}
+
+.header_button_case {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+
+.header_button_case > .header_button:nth-child(1) {
+  margin-right: 5px;
+}
+
+.header_button {
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: #0ecc87 2px solid;
+  background-color: #0ecc87;
+  color: white;
+}
+
+.header_button > i {
+  padding-right: 5px;
+  font-size: 15px;
+}
+
+.header_button:hover {
+  color: white;
+}
+
+.header_button-2 {
+  font-size: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 10px;
+  border: #0ecc87 2px solid;
+  background-color: white;
+  color: #0ecc87;
+}
+
+.header_button-2 > i {
+  padding-right: 5px;
+  font-size: 15px;
+}
+
+.header_button-2:hover {
+  color: #0ecc87;
+}
+
+/* ---- 사이드 바 ---- */
+
+.BlurForSidebar {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: grey;
+  background-blend-mode: multiply;
+  opacity: 0.7;
+  z-index: 49;
+  animation-name: fadeIn;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+.sidebar a {
+  font-size: 20px;
+  padding: 10px 0px;
+}
+.sidebar i {
+  font-size: 25px;
+}
+
+.sidebar .logout {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  font-size: 15px;
+  color: lightgrey;
+}
+
+.sidebar .logout > i {
+  font-size: 15px;
+  padding-right: 3px;
+}
+
+.sidebar_button_close {
+  /* position: absolute;
+  top: 0px; */
+  width: 100%;
+  height: 50px;
+  display: flex;
+  /* text-align: right; */
+  align-items: center;
+  justify-content: right;
+}
+
+.sidebar_container {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 50;
+  width: 300px;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation-name: slideIn;
+  animation-duration: 0.6s;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes slideIn {
+  0% {
+    right: -100px;
+  }
+  100% {
+    right: 0px;
+  }
+}
+
+.sidebar_container > .bottom {
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  justify-content: end;
+  flex-shrink: 0;
+  padding: 0px 10px;
+
+  box-shadow: 0 9px 5px 6px rgba(169, 169, 169, 0.3);
+}
+
+.sidebar_container > .bottom i {
+  color: #282828;
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.sidebar_container > .sidebar {
+  padding: 0px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+  flex-grow: 1;
+}
+
+.sidebar > .linkList {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+/* ----네브바에있는 프로필(마이페이지로 감)--- */
+
+.sidebar > .profile {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 10px 0px;
+  margin-bottom: 10px;
+  border-bottom: solid 1px #282828;
+}
+.sidebar > .profile > .info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.sidebar > .profile > .info .department {
+  font-size: 12px;
+}
+
+.sidebar > .profile .image {
+  flex-shrink: 0;
+  margin-right: 10px;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  border: solid 2px #0ecc87;
+}
+
+.sidebar > .profile i {
+  font-size: 20px;
+}
+
+/* ---- 네브바 ---- */
+
+.navbar {
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 0px 10px;
+
+  box-shadow: 0 9px 5px 6px rgba(169, 169, 169, 0.3);
+}
+
+.navbar .icon {
+  color: lightgrey;
+  width: calc(100%/4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  font-size: 20px;
+}
+
+.navbar .icon > i {
+  margin: 5px;
+}
+
+/* .somdListIcon{
+  display: flex;
+  justify-content: space-between;
+  align-content: space-between ;
+  width: 23px;
+  height: 23px;
+  margin: 5px;
+  flex-wrap: wrap;
+}
+.somdListIcon>i{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  width: 50%;
+  height: 50%;
+  flex-shrink: 0;
+} */
+
+/* .navbar .sidebar_button > i {
+  font-size: 25px;
+} */
+
+.navbar .text {
+  font-size: 10px;
+}
+
+.remove {
+  animation: removeHeader 0.3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes removeHeader {
+  0% {
+    top: 0px;
+  }
+  100% {
+    top: -50px;
+  }
+}
+
+.removeEmpty {
+  animation: removeEmpty 0.3s;
+  animation-fill-mode: forwards;
+}
+@keyframes removeEmpty {
+  0% {
+    height: 60px;
+  }
+  100% {
+    height: 0px;
+  }
+}
+
+.add {
+  animation: addHeader 0.3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes addHeader {
+  0% {
+    top: -50px;
+  }
+  100% {
+    top: 0px;
+  }
+}
+
+.addEmpty {
+  animation: addEmpty 0.3s;
+  animation-fill-mode: forwards;
+}
+@keyframes addEmpty {
+  0% {
+    height: 0px;
+  }
+  100% {
+    height: 60px;
+  }
+}
+
+/* <section class="header"></section>
+    <section class="EmptyForHeader"></section> */

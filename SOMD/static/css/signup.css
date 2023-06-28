@@ -1,0 +1,150 @@
+/* .SDcontainer{
+    height: 100%;
+} */
+h1{
+    font-size: 50px;
+    color: #0ECC87;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    padding-top: 7px;
+
+}
+h2{
+    text-align: center;
+    padding: 10px;
+    color: #0ECC87;
+    font-size: 20px;
+    font-weight: 600;
+}
+h3{
+    color:grey;
+    font-size: 15px;
+    /* color: #0ECC87; */
+}
+.label{
+    width: 100px;
+    font-size: 15px;
+    font-weight: 400;
+    height: 38.5px;
+    color: #0ECC87;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.input_text, select{
+    flex-grow: 1;
+    height: 38.5px;
+    flex-grow: 1;
+    padding: 5px;
+    border-radius: 5px;
+    border:#0ECC87 solid 3px;
+
+}
+
+.inputAndAlert{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.select_box{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.select_box>select{
+    margin-top: 3px;
+}
+.titleSection {
+    display: flex;
+    flex-direction: flex-start;
+    /* justify-content: center; */
+}
+
+/* .selectOption {
+    width: 185px;
+} */
+
+.signupBtn {
+    width: 200px;
+    /* margin: 5px; */
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    border: #0ecc87 2px solid;
+    background-color: #0ecc87;
+    color: white;
+    margin-top:20px;
+    margin-bottom: 20px;
+  }
+
+.upperMain{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* flex-direction: row; */
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid black; */
+    text-align: center;
+    padding: 20px 20px;
+}
+
+.upperMainText {
+    padding-left: 10px;
+}
+
+.mainbody {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.mainCol{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* width: 300px; */
+
+}
+
+.inputBlank {
+    display: flex;
+
+    justify-content: space-between;
+
+    width: 100%;
+    margin-top:  10px;
+}
+
+
+.errorMsg {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    font-size: 12px;
+    color: red;
+
+    margin-top: 3px;
+}
+
+#idError {
+    /* font-size: 12px */
+    color: blue;
+
+} 

@@ -1,0 +1,295 @@
+.SDcontainer{
+  position: relative;
+}
+
+.somd_post_view {
+  /* padding: 0px 10px; */
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---모든 프로필 기본 설정--- */
+
+.somd_post_view .profile {
+  /* padding: 0px 5px; */
+  display: flex;
+}
+.somd_post_view .profile > .image {
+  width: 35px;
+  height: 35px;
+  /* background-color: #0ECC87; */
+  border-radius: 50%;
+}
+.somd_post_view .profile>.name {
+  flex-grow: 1;
+  padding: 0px 5px;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.somd_post_view .profile>a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex-shrink: 0;
+    font-size: 15px;
+    color:lightgrey;
+}
+
+
+
+/* ----뷰포스트,헤더---- */
+.somd_post_view_header .title {
+  font-size: 30px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.somd_post_view_header>i {
+  width: 100%;
+  /* text-align: right; */
+  /* font-size: 20px; */
+  color: lightgrey;
+  /* padding: 0px 10px; */
+  /* padding-left: 10px;
+  padding-top: 3px; */
+}
+
+.somd_post_view_header .content{
+  flex-grow: 1;
+}
+
+.scrap{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+.somd_post_view_header .info {
+  display: flex;
+  justify-content: space-between;
+}
+.somd_post_view_header .profile {
+  margin-bottom: 5px;
+}
+.somd_post_view_header .date {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 5px;
+  color: grey;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.somd_post_view_header {
+  border-bottom: solid 1px lightgrey;
+  margin-bottom: 20px;
+}
+
+/* ----뷰포스트바디---- */
+.somd_post_view_body .image {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+
+  border-radius: 20px;
+}
+
+.somd_post_view_body .image > img {
+  width: 100%;
+}
+
+.somd_post_view_body{
+  border-bottom: solid 1px lightgrey;
+}
+
+.somd_post_view_header .icon{
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  padding: 0px 10px;
+  margin-bottom: 10px;
+}
+
+.somd_post_view_header .icon>i{
+  width: 20px;
+  display: flex;
+  justify-content: end;
+  font-size: 20px;
+
+  color: lightgrey;
+}
+
+.somd_post_view_footer {
+  margin: 0px 10px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+.somd_post_view_footer > .icon {
+  display: flex;
+  font-size: 20px;
+}
+
+
+.somd_post_view_footer >.icon >div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.somd_post_view_footer>.icon i {
+  margin: 3px;
+  color: grey;
+  margin-right: 10px;
+}
+
+
+.somd_post_view_footer>.icon>.comment i {
+
+  font-size: 18px;
+}
+
+/* ---댓글모음---- */
+
+input {
+  border: none;
+  background-color: white;
+}
+
+.comment_form {
+  width: 97%;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 15px;
+
+  position: absolute;
+  padding-top: 10px;
+  bottom: 0;
+  background-color: white;
+
+  z-index: 10;
+}
+
+.comment_form >.text {
+  /* resize: vertical;
+  word-wrap: break-word; */
+  flex-grow: 1;
+  height: 50px;
+  /* margin: 5px 0px; */
+  border: solid 1px lightgrey;
+}
+
+.comment_form>.submit {
+  color: lightgrey;
+  width: 50px;
+
+  /* margin: 5px 0px; */
+  border: solid 1px lightgrey;
+  /* margin-left: 5px; */
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.somd_post_view_commentConatiner .title {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 20px;
+}
+
+.somd_post_view_commentConatiner .title > i {
+  padding-left: 3px;
+  font-size: 7px;
+}
+
+
+.somd_post_view_commentConatiner .comment {
+  margin-bottom: 20px;
+  border-bottom: solid 1px lightgrey;
+}
+
+.somd_post_view_commentConatiner .comment .profile {
+  margin-bottom: 5px;
+}
+
+.somd_post_view_commentConatiner .comment .comment_body {
+  margin-bottom: 7px;
+}
+
+.somd_post_view_commentConatiner .comment .comment_footer {
+  font-size: 5px;
+  color: grey;
+  padding-bottom: 5px;
+}
+
+.comment_list{
+  margin-bottom: 80px;
+}
+
+
+textarea {
+  /* background-color: rgb(250, 250, 250); */
+  border-radius: 5px;
+  border: solid 1px lightgrey;
+}
+
+textarea:focus {
+  outline: 0;
+}
+
+.post_view_menu{
+  position: absolute;
+
+  flex-direction: column;
+  justify-content: start;
+  align-items: start;
+
+  top: 25px;
+  right:7px;
+
+  width: 160px;
+
+  padding: 10px;
+  background-color: white;
+  border: solid 1.8px #0ecc87;
+  box-shadow: 0 0px 2px 1px rgba(169, 169, 169, 0.299);
+  border-radius: 10px;
+  border-top-right-radius: 0px;
+
+}
+
+.post_view_menu>a{
+  display: flex;
+  align-items: center;
+  color: grey;
+  margin: 10px 10px;
+  font-weight: 500;
+}
+
+.post_view_menu>a>i{
+  font-size: 16px;
+  margin-right: 5px;
+}
+.post_view_menu>a:nth-child(2){
+  color: rgb(234, 66, 66);
+}
+
+/* 비로그인으로 좋아요 눌렀을 시 생기는 문구 */
+.needLoginMsg {
+  color: blue;
+  font-size: 13px;
+}

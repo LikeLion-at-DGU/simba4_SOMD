@@ -1,0 +1,43 @@
+{% extends 'start_base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+<div class="upperMain">
+    <!-- 로고 이미지 지움 -->
+    <!-- <div>
+        <div class="SomDLogo image"></div>
+    </div> -->
+    <div class="upperMainText">
+        <div class="maincolor" onClick="window.location.href = '/'">
+            SOM D
+        </div>
+        <span>
+            동국대 소모임 네트워킹 서비스
+        </span>
+    </div>
+</div>
+<div class="lowerMain">
+    <form action="{% url 'accounts:login' %}" method="POST" class="btndiv">
+        {% csrf_token %}
+        <input class="inputbtn" type="text" name="username" placeholder="ID"><br>
+        <input class="inputbtn" type="password" name="password" placeholder="PassWord"><br>
+        {% if login_success is not None and not login_success %}
+            <p class="errorMsg">ID/PW를 다시 확인하세요</p>
+        {% endif %}
+        <input class="loginbtn"type="submit" value="로그인" style="color:white">
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // SOM D 로고 클릭 시 메인 페이지로 이동
+        document.querySelector('.image').addEventListener('click', function() {
+        window.location.href = '/';  
+        });
+      // SOM D 텍스트 클릭 시 메인 페이지로 이동
+        document.querySelector('.maincolor').addEventListener('click', function() {
+        window.location.href = '/';  
+        });
+    });
+</script>
+{% endblock %}

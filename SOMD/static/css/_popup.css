@@ -1,0 +1,91 @@
+
+/* 팝업 창을 가리키는 클래스 */
+.popup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #0ECC87;
+    padding: 20px;
+    /* border: 1px solid #ddd; */
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 4;
+    width: 90%;
+    height: 60%;
+  
+    display: flex;
+    flex-direction: column;
+}
+
+.popupTitle{
+    color: white;
+    margin-bottom: 10px;
+    font-size: 25px;
+    font-weight: 800;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.popup > .profile {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    /* border-bottom: solid 1px #282828; */
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.popup > .profile > .info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.popup > .profile > .info .department {
+    font-size: 12px;
+}
+
+.popup > .profile .image {
+    flex-shrink: 0;
+    margin-right: 10px;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    border: solid 2px #0ecc87;
+}
+
+.popup  > .profile i {
+    font-size: 20px;
+}
+
+.popup .popupContent{
+    flex-grow: 1;
+    overflow-y: scroll;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+.popup .requestTitle {
+    color:#282828;
+    font-size: 15px;
+    background-color: white;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.popup .requestMotivation{
+    overflow-y: hidden;
+}
+
+.popupContent div {
+    white-space: pre-wrap;
+  }

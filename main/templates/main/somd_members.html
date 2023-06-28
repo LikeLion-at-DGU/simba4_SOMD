@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/somd_members.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/_button.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/_popup.css' %}">
+
+
+<section class="header">
+  <section class="mainTitle">
+      <a href="{% url 'main:somdFeed' somd.id %}"><i class="fa-solid fa-chevron-left"></i></a>
+      <div>{{ somd.name }}</div>
+  </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage">
+    <section class="mainForm">
+      {% if somd.join_requests.all|length > 0 %}
+      <div class="section_title">가입 요청</div>  
+      <div class="joinList">          
+
+        {% for request in somd.join_requests.all %}
+        <section class="clickSpan newMemberForm"  
+                        data-nickname="{{ request.writer.profile.nickname }}" 
+                        data-college="{{ request.writer.profile.college }}" 
+                        data-department="{{ request.writer.profile.department }}"  
+                        data-profileimg="{{ request.writer.profile.profile_pic.url }}"
+                        
+                        data-requestTitle="{{ request.title }}"
+                        data-requesmotivation="{{ request.motivation }}"
+                        data-requestPubDate="{{ request.pub_date }}"
+                        data-requestUrl="{% url 'main:somd_members_wantTojoin' somd.id request.id%}">
+
+
+          <div class="newMemberName">{{request.writer.profile.nickname}}</div>
+          <div class="newMemberFormTitle">{{request.title}}</div>
+        </section>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+
+      <div class="section_title">소모임 회원</div>  
+
+
+        {% for join_user in somd.join_members.all %}
+        <div class="manageMemberForm">
+          <div class="icon"><i class="fa-solid fa-grip-lines"></i></div>
+          <div class="information">
+            <div class="name">{{join_user.profile.nickname}}</div>
+            <div class="intro">{{join.user.profile.intro}}</div>
+            <div class="college">{{join_user.profile.college}} {{join_user.profile.department}}</div>
+          </div>
+          {% if not join_user == somd.admin %}
+          <a class="deleteBtn" href= "{% url 'main:somd_members_delete' somd.id join_user.id %}"><i class="fa-solid fa-user-large-slash"></i></a>
+          {%endif%}
+        </div>
+
+            {% endfor %}
+            </section>
+          </div>
+    </section>
+</section>
+
+<script>
+
+function wantTojoin(event){
+  wantTojoin_result = document.getElementById("wantTojoin_result")
+
+  if(event.target.id == "acceptBtn"){
+    wantTojoin_result.value = "accept"
+    
+  }
+  else if(event.target.id == "rejectBtn"){
+    wantTojoin_result.value = "reject"
+  }
+  else{
+
+  }
+  document.getElementById("popup").submit();
+}
+
+function openPopup(nickname, college, department, profileimg, requestTitle,requesMotivation,requestPubDate,requestUrl) {
+    // 팝업 내용을 구성하는 HTML 코드
+    var popupContent = `
+     <form action = ${requestUrl} id="popup" class="popup" style="display: flex;"  method="POST" enctype="multipart/form-data" onsubmit="return false;">
+      <div class ="popupTitle">가입신청</div>  
+      {% csrf_token %}  
+        <div class="profile">
+          <div class="image" style="background-image:url( ${profileimg} );"></div>
+          <div class="info">
+            <div class="name">${nickname}</div>
+            <div class="department">${college}</div>
+            <div class="department">${department}</div>
+          </div>
+        </div>
+        <div class="requestTitle">${requestTitle}</div>
+        <div class="popupContent">
+            <div class="requestMotivation">${requesMotivation}</div>
+          </div>
+
+        <div class="popupBtns">
+          <div class="button_case">
+            <button class="body_button white_button body_button2" id="acceptBtn"  onclick="wantTojoin(event)">승인</button>
+            <button class="body_button white_button body_button2" id="rejectBtn"  onclick="wantTojoin(event)">거부</button>
+          </div>
+          <input id="wantTojoin_result" type="text" name="wantTojoin_result" style="display: none;">
+        </div>
+      </from>
+    `;
+
+    // 팝업을 표시할 요소를 생성하고 내용을 설정
+    var popupElement = document.createElement("div");
+    popupElement.classList.add("popup-container");
+    popupElement.innerHTML = popupContent;
+
+    document.querySelector(".somdPage").appendChild(popupElement);
+}
+
+var newMemberFormButtons = document.querySelectorAll(".clickSpan");
+newMemberFormButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+        var nickname = this.dataset.nickname;
+        var college = this.dataset.college;
+        var department = this.dataset.department;
+        var profileimg = this.dataset.profileimg;
+        var requestTitle = this.dataset.requesttitle;
+        var requesMotivation = this.dataset.requesmotivation;
+        var requestPubDate = this.dataset.requestpubdate;
+        var requestUrl = this.dataset.requesturl;
+        openPopup(nickname, college, department, profileimg, requestTitle,requesMotivation,requestPubDate,requestUrl);
+    });
+});
+
+
+
+</script>
+
+{% endblock %}

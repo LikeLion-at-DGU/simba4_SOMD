@@ -1,0 +1,17 @@
+{% extends 'start_base.html' %}
+{% load static %}
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/start.css' %}">
+
+<section class="somdStart">
+            <div class="SomDLogo image"></div>
+            <div class="title">SOM D</div>
+            <div class="sub title">동국대 소모임 네트워킹 서비스</div>
+            <div class="buttons">
+                <a class="button" href="{% url 'accounts:login' %}">로그인</a>
+                <a class="start button" href="{% url 'main:mainPage' %}">게스트로 구경하기</a>
+                <a class="button" href="{% url 'accounts:signup' %}">회원가입</a>
+            </div>
+        </section>
+{% endblock %}

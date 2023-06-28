@@ -1,0 +1,52 @@
+/* 버튼을 모음 */
+.button_case{ 
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    /* position: absolute;
+    right: 0px;
+    display: flex; */
+}
+
+/* 기본 버튼 */
+.white_button{
+    background-color: white;
+    color: #0ECC87;
+
+}
+
+.green_button{
+    background-color: #0ECC87;
+    color: white;
+}
+
+.white_button:focus, .white_button:hover .white_button:active{
+    color: #0ECC87
+}
+
+
+.body_button{
+    /* margin: 5px; */
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    border: #0ECC87 2px solid;
+}
+
+.green_button:focus, .green_button:hover, .green_button:active{
+    color: white;
+}
+
+
+
+/* 버튼2개가 row일경우 */
+.button_case> .body_button2:nth-child(1){
+    margin-right: 5px;
+}
+.button_case> .body_button2:nth-child(2){
+    margin-left: 5px;
+}

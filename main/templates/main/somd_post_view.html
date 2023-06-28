@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/somd_post_view.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/_button.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/_popup.css' %}">
+
+<section class="header">
+    <section class="mainTitle">
+        <i class="fa-solid fa-chevron-left" onclick = gotoBack()></i>
+        <!-- <i class="fa-solid fa-house"></i> -->
+        <div></div>
+    </section>
+</section>
+<section class="EmptyForHeader"></section>
+
+<section class="somdPage">
+    <section class="somd_post_view">
+        <section class="somd_post_view_header">
+            <div class="title">
+                <div class="content">
+                    {{post.title}}
+                </div>
+            </div>
+
+            <div class="info">
+                <div class="profile">
+                    <div class="profile_info image" style="background-image:url({{ post.writer.profile.profile_pic.url }});" data-nickname="{{ post.writer.profile.nickname }}" data-college="{{ post.writer.profile.college }}" data-department="{{ post.writer.profile.department }}" data-intro="{{ post.writer.profile.intro }}" data-profileimg="{{ post.writer.profile.profile_pic.url }}"></div>
+                    <div class="name">{{post.writer.profile.nickname}}</div>
+                </div>
+                <div class="date">{{post.pub_date}}</div>
+            </div>
+            
+            <div class="icon">
+                {% if post.is_secret %} <!--c참 비밀글일 경우-->
+                <i class ="fa-solid fa-lock" ></i>
+                {% else %}
+                <i class ="fa-solid fa-unlock" ></i>
+                {% endif %}
+                
+                {% if post.writer == request.user or  request.user == post.somd.admin %}
+                <i class="fa-solid fa-ellipsis-vertical" onclick="post_view_menu_open(event)" style="position: relative;">
+                    <div id="post_view_menu" class="post_view_menu" style="display: none;">
+                        {% if post.writer == request.user %}
+                        <a href="{% url 'main:somd_post_edit' post.id %}" class="button"><i class="fa-solid fa-pen"></i> 글수정</a>
+                        {%endif%}
+                        <a href="{% url 'main:somd_post_delete' post.id %}" class="button"><i class="fa-solid fa-trash"></i> 삭제하기</a>
+                    </div>
+                </i>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="somd_post_view_body">
+            <p>{{post.content}}</p>
+            {% if post.images %}
+                {% for image in images %}
+                    <!-- <div class="image" style="background-image:url( {{ image.image.url }} );"></div> -->
+                    <div class="image">
+                        <img src="{{image.image.url}}" alt="사진">
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </section>
+
+        <section class="somd_post_view_footer">
+            <div class="icon">
+                <div class="like">
+                    {% if request.user in post.like.all %}
+                    <i id="like-icon-{{ post.id }}" class="fa-solid fa-heart" style="color:#0ecc87" onClick="likePost({{ post.id }})"></i>
+                    {% else %} 
+                    <i id="like-icon-{{ post.id }}" class="fa-regular fa-heart" onClick="likePost({{ post.id }})"></i>
+                    {% endif %} 
+                    <div id="like-count-{{ post.id }}">{{ post.like_count }}</div>
+                </div>
+                <div class="comment">
+                    <i class="fa-regular fa-message"></i>
+                    <div>{{ post.comment_count }}</div>
+                </div>
+            </div>
+            
+            <div class="scrap">
+                {% if request.user in post.scrap.all %}
+                <i class="fa-solid fa-bookmark" style="color: #0ecc87;" onClick="location.href='{% url 'main:scrap' post.id %}'"></i>
+                {% else %} 
+                <i class="fa-regular fa-bookmark" onClick="location.href='{% url 'main:scrap' post.id %}'"></i>
+                {% endif %}    
+            </div>
+
+        </section>
+    
+        <section class="somd_post_view_commentConatiner">
+            <div class="title">댓글 <i class="fa-solid fa-angle-right"></i> </div>
+            
+            <!-- 20230624 22:20 댓글 클릭시 정보 팝업 띄우기 작업중 > 작업완료 -->
+            <div class="comment_list">
+                {% for comment in comments %}
+                <div class="comment">
+                    <div class="profile">
+                        <div class="profile_info image" style="background-image:url({{ comment.writer.profile.profile_pic.url }});" data-nickname="{{ comment.writer.profile.nickname }}" data-college="{{ comment.writer.profile.college }}" data-department="{{ comment.writer.profile.department }}" data-intro="{{ comment.writer.profile.intro }}" data-profileimg="{{ comment.writer.profile.profile_pic.url }}"></div>
+                        <div class="name">{{ comment.writer.profile.nickname }}</div>
+                        <!-- 삭제버튼 -->
+                        {% if comment.writer == request.user or  request.user == post.somd.admin %}
+                        <a href="{% url 'main:comment_delete' post.id comment.id %}"><i class="fa-solid fa-trash"></i></a>
+                        {% endif %}
+                    </div>
+                    <div class="comment_body">
+                        {{ comment.content }}
+                    </div>
+                    <div class="comment_footer">
+                        {{ comment.pub_date }}
+                        <!-- <button class="profile_info" data-nickname="{{ comment.writer.profile.nickname }}" data-college="{{ comment.writer.profile.college }}" data-department="{{ comment.writer.profile.department }}" data-intro="{{ comment.writer.profile.intro }}" data-profileimg="{{ comment.writer.profile.profile_pic.url }}">작성자 정보</button> -->
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </section>
+    </section>
+
+</section>
+
+<form class="comment_form" method="POST" action="{% url 'main:somd_post_view' post.id %}">
+    {% csrf_token %}
+    <textarea class="text" type="text" name="comment" required></textarea>
+    <button class="submit" type="submit" name="submit">
+        <i class="fa-solid fa-paper-plane"></i>
+    </button>
+</form>
+
+<script>
+
+// 작성자 정보 버튼 클릭 시 팝업을 열기 위한 이벤트 처리
+var profileInfoButtons = document.querySelectorAll(".profile_info");
+profileInfoButtons.forEach(function(button) {
+    button.addEventListener("click", function() {
+        var nickname = this.dataset.nickname;
+        var college = this.dataset.college;
+        var department = this.dataset.department;
+        var intro = this.dataset.intro;
+        var profileimg = this.dataset.profileimg;
+        openPopup(nickname, college, department, intro, profileimg);
+    });
+});
+
+// 팝업을 열기 위한 함수
+// user.profile.profile_pic.url
+function openPopup(nickname, college, department, intro, profileimg) {
+// 팝업 내용을 구성하는 HTML 코드
+var popupContent = `
+    <div id="popup" class="popup" style="display: flex;"  method="POST" enctype="multipart/form-data" onsubmit="return false;">
+      {% csrf_token %}  
+        <div class="profile">
+          <div class="image" style="background-image:url( ${profileimg} );"></div>
+          <div class="info">
+            <div class="name">${nickname}</div>
+            <div class="department">${college}</div>
+            <div class="department">${department}</div>
+          </div>
+        </div>
+        
+        <div class="popupContent">
+            <div>${intro}</div>    
+        </div>
+
+        <div class="popupBtns">
+          <div class="button_case">
+            <button class="body_button white_button body_button1" onclick="closePopup()">닫기</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+// 팝업을 표시할 요소를 생성하고 내용을 설정
+var popupElement = document.createElement("div");
+popupElement.classList.add("popup-container");
+popupElement.innerHTML = popupContent;
+
+// body에 팝업을 추가
+document.body.appendChild(popupElement);
+centerPopup();
+}
+
+// 팝업을 중앙에 위치시키는 함수
+function centerPopup() {
+    var popupContainer = document.querySelector(".popup-container");
+    var popup = document.querySelector(".popup");
+
+    var windowHeight = window.innerHeight;
+    var popupHeight = popup.offsetHeight;
+
+    var top = Math.max((windowHeight - popupHeight) / 2, 0);
+
+    popupContainer.style.justifyContent = top + "px";
+}
+
+// 팝업을 닫기 위한 함수
+function closePopup() {
+    // 팝업을 닫을 요소를 찾아 제거합니다.
+    var popupElement = document.querySelector(".popup-container");
+    popupElement.remove();
+}
+
+
+let post_view_menu_state ="close"
+let post_view_menu = document.querySelector("#post_view_menu");
+function post_view_menu_open(event){
+    if(post_view_menu_state == "close"){
+        // console.log("1")
+        post_view_menu_state ="opne"
+        post_view_menu.style.display ="flex";
+    }
+    else{
+        post_view_menu_state ="close"
+        post_view_menu.style.display ="none";
+    }   
+}
+</script>
+
+<script>
+    // 비동기 좋아요를 위한 script
+    function likePost(postId) {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var likeCountElement = document.getElementById('like-count-' + postId);
+                
+                if( response.like_count == undefined || null){
+                    likeCountElement.innerText = "로그인 하세요";
+                } else likeCountElement.innerText = response.like_count; 
+                
+                var likeIconElement = document.getElementById('like-icon-' + postId);
+                if (response.liked) {
+                    likeIconElement.classList.remove('fa-regular');
+                    likeIconElement.classList.add('fa-solid');
+                    likeIconElement.style.color = '#0ecc87';
+                } else {
+                    likeIconElement.classList.remove('fa-solid');
+                    likeIconElement.classList.add('fa-regular');
+                    likeIconElement.style.color = '';
+                }
+            }
+        };
+        xhr.open('POST', '{% url 'main:somd_post_like' post.id %}');
+        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        xhr.send();
+    }
+</script>
+
+<script>
+    let beforeLink = document.referrer
+    function gotoBack(){
+        console.log(beforeLink);
+        if(beforeLink.includes("scrap") || beforeLink.includes("mainPage")|| beforeLink.includes("somdFeed") ){
+            location.href = beforeLink;
+        }
+        else{
+            location.href = '{% url 'main:somdFeed' post.somd.id %}';
+        }
+    }
+    </script>
+    
+{% endblock %}
