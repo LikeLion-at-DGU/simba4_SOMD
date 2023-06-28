@@ -65,8 +65,10 @@ form{
 }
 .titleSection {
     display: flex;
-    flex-direction: flex-start;
+    flex-direction: column; 
+    align-items: center;
     /* justify-content: center; */
+    f
 }
 
 /* .selectOption {
@@ -148,3 +150,9 @@ form{
     color: blue;
 
 } 
+
+#alcls {
+    color:tomato;
+    margin-bottom: 13px;
+    font-size: 16px;
+}

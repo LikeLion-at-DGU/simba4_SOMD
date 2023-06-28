@@ -22,7 +22,7 @@
     <section class="titleSection">
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
+                <div class="alert alert-{{ message.tags }}" id="alcls">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -87,7 +87,7 @@
             <section class="inputAndAlert">
                 <div class="inputBlank">
                     <div class="label">ID</div>
-                    <input class="input_text" type="text" id="username" name="username" required>
+                    <input class="input_text" type="text" id="username" name="username" placeholder="4~16자 이상 영문, 숫자" required>
                 </div>
                 <span class="errorMsg" id="idError"></span>
             </section>
@@ -97,7 +97,7 @@
             <section class="inputAndAlert">
                 <div class="inputBlank">
                     <div class="label">PW</div>
-                    <input class="input_text" type="password" id="password" name="password" required>
+                    <input class="input_text" type="password" id="password" name="password" placeholder="8자 이상 영문, 숫자, 특수문자" required>
                     
                 </div>
                 <span class="errorMsg" id="pwError"></span>
