@@ -42,7 +42,7 @@ def myPage_update(request):
     if "profile_pic" in request.FILES:
         if update_user.profile.profile_pic:
             default_image_path = os.path.join(settings.MEDIA_ROOT, 'user_profile/usrDefaultImage.png')
-            if update_user.backgroundimage.path != default_image_path:
+            if update_user.profile.profile_pic.path != default_image_path:
                 os.remove(os.path.join(settings.MEDIA_ROOT, update_user.profile.profile_pic.path))
         update_user.profile.profile_pic = request.FILES["profile_pic"]
         

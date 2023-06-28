@@ -49,7 +49,7 @@ def signup(request):
         college = request.POST['college']
         department = request.POST.get('department')
         email = request.POST['email']
-        certification_pic = request.FILES.get("certification")
+        certification_pic = request.FILES["certification"]  
 
         if not re.match(r'^[a-zA-Z0-9_-]{4,16}$', request.POST['username']):
             # messages.error(request, '유효한 아이디 형식이 아닙니다.')
@@ -63,7 +63,7 @@ def signup(request):
             # messages.error(request, '비밀번호가 일치하지 않습니다.')
             return redirect('accounts:signup')
 
-        if User.objects.filter(Q(username=request.POST['username']) | Q(email=request.POST['email'])).exists():
+        if User.objects.filter(username=request.POST['username']).exists() | Profile.objects.filter(email=request.POST['email']).exists():
             messages.error(request, '이미 사용 중인 ID 또는 이메일입니다.')
             return redirect('accounts:signup')
 
@@ -86,7 +86,6 @@ def signup(request):
             profile.save()
 
             auth.login(request, user)
-            messages.success(request, '회원 가입이 완료되었습니다.')
             return redirect('main:mainPage')
         except Exception as e:
             user.delete()

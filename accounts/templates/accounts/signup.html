@@ -20,13 +20,16 @@
 <form action="{% url 'accounts:signup' %}" method="POST" onsubmit="return false;" enctype="multipart/form-data">
     {% csrf_token %}
     <section class="titleSection">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
         <h3 class="title">회원가입을 위해 개인정보 입력해주세요!</h3>
     </section>
-    {% if messages %}
-    {% for message in messages %}
-        <div style="color: red;">{{ message }}</div>
-    {% endfor %}
-    {% endif %}
+
     <section class="mainbody">
         <div class="mainCol">
             <div class="inputBlank">
@@ -112,12 +115,12 @@
 
             <div class="inputBlank">
                 <div class="label">Email</div>
-                <input class="input_text" type="text" name="email" required>
+                <input class="input_text" type="text" id = "email" name="email" required>
             </div>
 
             <div class="inputBlank"  style="display: flex; width: 100%; justify-content: center; align-items: center;">
                 <div class="label">동국대 인증</div>
-                <input style="flex-grow: 1;"  type ="file" accept="image/*" name ="certification" required>
+                <input style="flex-grow: 1;"  type ="file" accept="image/*" id ="certification" name = "certification" required>
             </div>
             <div style="width: 100%; color:lightgrey">동국패스 캡쳐 혹은 학생증 사진을 첨부해주세요.<br> 잘못된 사진을 첨부할시 강퇴당할 수 있습니다.</div>
         </div>
@@ -210,6 +213,7 @@ function validateForm() {
     var college = document.getElementById('college').value;
     var department = document.getElementById('department').value;
     var birthday = document.getElementById('birth').value;
+    var certification = document.getElementById('certification');
 
     var year = birthday.substring(0,4);
     var month = birthday.substring(4,6);
@@ -223,7 +227,11 @@ function validateForm() {
     if (!college||!department||!birthday){
         alert("정보를 모두 입력해주세요.");
         return false;
+    } else if (!certification || !certification.files || !certification.files[0]) {
+        alert("동국패스 혹은 학생증 사진을 업로드해주세요.");
+        return false;
     }
+    
     // 생년월일 확인
     if (!isBirthday(year, month, day)) {
         alert("생년월일이 올바르지 않습니다.");
